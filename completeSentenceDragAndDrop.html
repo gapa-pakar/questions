@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl"> <!-- Set the page direction to RTL -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Question</title>
+    <style>
+        @font-face {
+            font-family: "Assistant";
+            src: url("assets/fonts/Assistant/Assistant-Regular.ttf");
+        }
+
+        /* General body styling */
+        body {
+            font-family: "Assistant", sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-size: calc(1.1vh + 1.1vw + 10px); /* Increased font size */
+            text-align: center;
+        }
+
+        /* Question text styling */
+        #question {
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+
+        /* Sentence styling */
+        .sentence {
+            font-size: 1.5rem; /* Increased font size */
+            margin: 1rem 0; /* Added margin for spacing */
+            padding: 1rem; /* Added padding for better layout */
+            line-height: 1.5; /* Added line height for spacing between lines */
+            background-color: transparent; /* Removed white background */
+            width: 80%; /* Set width for the sentence */
+        }
+
+        /* Drop zone styling */
+        .drop-zone {
+            display: inline-block; /* Maintain the inline-block display */
+            width: 10rem; /* Width of drop zone */
+            height: 2rem; /* Height of drop zone */
+            border: 2px solid #ccc; /* Solid border */
+            border-radius: 0.5rem;
+            margin: 0 0.5rem; /* Spacing between drop zones */
+            background-color: rgba(255, 255, 255, 0.9); /* Set background to white */
+            vertical-align: middle;
+            font-size: 1rem; /* Ensure font size is consistent */
+            text-align: center; /* Center text in drop zones */
+            line-height: 2rem; /* Center text vertically */
+        }
+
+        /* Word bank container styling */
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            border: 2px solid #ccc; /* Added border to word bank */
+            border-radius: 0.5rem; /* Rounded corners */
+            padding: 1rem; /* Added padding */
+            background-color: rgba(255, 255, 255, 0.7); /* Slight background color */
+            max-width: 600px; /* Set max width for word bank */
+        }
+
+        /* Word bank item styling */
+        .word {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: 2px solid white;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            cursor: grab;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Word hover effect */
+        .word:hover {
+            background-color: rgba(200, 200, 200, 0.5);
+        }
+
+        /* Next button styling */
+        #next-btn {
+            font-family: "Assistant", sans-serif;
+            font-weight: 600;
+            border: 2px solid white;
+            border-radius: 3rem;
+            background-color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            padding: 0.5rem 1.5rem;
+            cursor: pointer;
+            margin-top: 1rem; /* Added margin on top of button */
+        }
+
+        /* Connective letters styling */
+        .connective-letter {
+            display: inline; /* Ensures letters stay inline with drop zones */
+            white-space: nowrap; /* Prevents line breaks */
+        }
+    </style>
+</head>
+<body>
+    <!-- Question -->
+    <div id="question">השלימו את המשפט בעזרת מחסן המילים</div>
+
+    <!-- Sentence with drop zones -->
+    <div class="sentence">
+        חטיבת החילוץ וההדרכה תהווה גוף <span class="connective-letter">ל</span><span class="drop-zone" id="drop1"></span> של מערך הלחימה בפקע"ר, 
+        <span class="drop-zone" id="drop2"></span> <span class="connective-letter">ו</span><span class="drop-zone" id="drop3"></span> את מסגרות פקע"ר 
+        <span class="connective-letter">ב</span><span class="drop-zone" id="drop4"></span> <span class="connective-letter">וב</span><span class="drop-zone" id="drop5"></span> בתחומי 
+        <span class="connective-letter">ה</span><span class="drop-zone" id="drop6"></span> <span class="connective-letter">וה</span><span class="drop-zone" id="drop7"></span>
+    </div>
+
+    <!-- Word Bank -->
+    <div class="word-bank">
+        <div class="word" id="word1">חילוץ</div>
+        <div class="word" id="word2">תכשיר</div>
+        <div class="word" id="word3">בניין כוח</div>
+        <div class="word" id="word4">לחימה</div>
+        <div class="word" id="word5">סדיר</div>
+        <div class="word" id="word6">תאמן</div>
+        <div class="word" id="word7">אב״כ</div>
+        <div class="word" id="word8">מילואים</div>
+        <div class="word" id="word9">בתוך</div>
+        <div class="word" id="word10">מחוץ</div>
+        <div class="word" id="word11">הארץ</div>
+        <div class="word" id="word12">חטיבה</div>
+        <div class="word" id="word13">חילוץ והצלה</div>
+        <div class="word" id="word14">כתום</div>
+        <div class="word" id="word15">בשגרה</div>
+        <div class="word" id="word16">במרחב האזרחי</div>
+    </div>
+
+    <!-- Next button -->
+    <button id="next-btn">הבא</button>
+
+    <script>
+        // Drag and drop functionality
+        const words = document.querySelectorAll('.word');
+        const dropZones = document.querySelectorAll('.drop-zone');
+    
+        // Add drag events to words
+        words.forEach(word => {
+            word.setAttribute('draggable', 'true');
+    
+            word.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', e.target.id); // Set the id of the dragged word
+                e.target.style.opacity = '0.5'; // Make the word slightly transparent
+            });
+    
+            word.addEventListener('dragend', (e) => {
+                e.target.style.opacity = ''; // Reset opacity when drag ends
+            });
+        });
+    
+        // Add drag events to drop zones
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault(); // Prevent default to allow drop
+            });
+    
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const wordId = e.dataTransfer.getData('text/plain');
+                const word = document.getElementById(wordId);
+    
+                // Check if the word is dropped in the correct zone
+                if (isCorrectDrop(zone.id, wordId)) {
+                    // Clear all styles from the word
+                    word.style.backgroundColor = ''; // Remove background color
+                    word.style.border = ''; // Remove border
+                    word.style.padding = ''; // Remove padding
+                    word.style.margin = ''; // Remove margin
+                    word.style.display = 'inline'; // Ensure it behaves as inline
+                    word.style.lineHeight = 'normal'; // Reset line height
+                    word.style.textAlign = 'center'; // Center text in the drop zone
+                    
+                    // Center the word inside the drop zone
+                    zone.innerHTML = ''; // Clear any existing content in the drop zone
+                    zone.appendChild(word); // Move word to the drop zone
+                    word.setAttribute('draggable', 'false'); // Make the word undraggable
+                    zone.style.textAlign = 'center'; // Center text in drop zone
+                    zone.style.lineHeight = '2rem'; // Match line height for vertical centering
+                    word.style.border = 'none'; // Ensure border is removed
+                    word.style.backgroundColor = 'transparent'; // Ensure background is transparent
+                } else {
+                    // Return word to the word bank if dropped incorrectly
+                    word.style.opacity = '1'; // Reset opacity
+                    document.querySelector('.word-bank').appendChild(word); // Move word back to word bank
+                }
+            });
+        });
+    
+        function isCorrectDrop(dropId, wordId) {
+            const correctPairs = {
+                drop1: 'word3', // "בניין כוח"
+                drop2: 'word2', // "תכשיר"
+                drop3: 'word6', // "תאמן"
+                drop4: 'word5', // "סדיר"
+                drop5: 'word8', // "מילואים"
+                drop6: 'word1', // "חילוץ"
+                drop7: 'word7'  // "אב״כ"
+            };
+            return correctPairs[dropId] === wordId; // Return true if correct
+        }
+    </script>
+    
+</body>
+</html>

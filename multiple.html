@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiple Choice Question</title>
+  <style>
+    @font-face {
+    font-family: "Assistant";
+    src: url("assets/fonts/Assistant/Assistant-Regular.ttf");
+    }
+
+    html, body {
+        font-family: "Assistant";
+        font-size: calc(1vh + 1vw + 8px);
+        direction: rtl;
+        overflow: hidden;
+        text-align: right;
+    }
+
+    body {
+        background-image: url("assets/images/background.svg");
+        background-size: 100vw 104vh;
+        background-repeat: no-repeat;
+        -webkit-tap-highlight-color: transparent;
+    } 
+
+    #page {
+        height: calc(100vh);
+        position: absolute;
+        top: 0rem;
+        width: 100vw;
+    }
+
+    #question-container {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .question-title {
+        font-weight: 600;
+        padding-right: 1rem;
+    }
+
+    .answer {
+        text-align: center;
+        width: 20rem;
+        position: relative;
+        margin: 0.5rem;
+        border: 2px solid white;
+        border-radius: 3rem;
+        padding: 0.2rem;
+        background-color: rgb(255, 255, 255, 0.5);
+    }
+
+    .answer:hover {
+        cursor: pointer;
+    }
+
+    .selected {
+        border-color: rgb(103, 169, 255);
+        background-color: rgb(103, 169, 255, 0.5);
+    }
+
+    .correct {
+        border-color: rgb(61, 223, 115);
+        background-color: rgb(61, 223, 115, 0.5);
+    }
+
+    .wrong {
+        border-color: rgb(252, 90, 90);
+        background-color: rgb(252, 90, 90, 0.5);
+    }
+
+    #check-btn {
+        border: 2px solid white;
+        border-radius: 3rem;
+        background-color: rgb(255, 255, 255, 0.5);
+        font-size: 0.8rem;
+        padding: 0.2rem 0.7rem;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+  </style>
+</head>
+<body>
+  <div id="page">
+    <div id="question-container">
+        <div class="question-title">מתי הוקם פיקוד העורף?</div>
+        <div id="ans-container">
+            <div id="ans1" class="answer">1992</div>
+            <div id="ans2" class="answer">1990</div>
+            <div id="ans3" class="answer">2016</div>
+            <div id="ans4" class="answer">1982</div>
+        </div>
+        <button id="check-btn">בדיקה</button>
+    </div>
+  </div>
+
+</body>
+<script>
+    // Handle selecting and deselecting answers
+    function handleSelectedAnswer() {
+      const answers = document.querySelectorAll('.answer');
+      let selectedAnswer = null;
+
+      answers.forEach(answer => {
+        answer.addEventListener('click', (event) => {
+          event.stopPropagation(); // Prevent the click from bubbling to the body
+
+          // If the clicked answer is already selected, deselect it
+          if (selectedAnswer === answer) {
+            answer.classList.remove('selected');
+            selectedAnswer = null;
+          } else {
+            // Deselect previously selected answer (if any)
+            if (selectedAnswer) {
+              selectedAnswer.classList.remove('selected');
+            }
+
+            // Select the clicked answer
+            answer.classList.add('selected');
+            selectedAnswer = answer;
+          }
+        });
+      });
+
+      // Deselect any selected answer if a non-answer element is clicked
+      document.addEventListener('click', (event) => {
+        if (!event.target.classList.contains('answer')) {
+          if (selectedAnswer) {
+            selectedAnswer.classList.remove('selected');
+            selectedAnswer = null;
+          }
+        }
+      });
+    }
+
+    // Check if the selected answer is correct
+    function checkMultipulChoice() {
+      const selectedAnswer = document.querySelector('.selected');
+      const correctAnswer = document.getElementById('ans1');
+      const checkButton = document.getElementById('check-btn');
+
+      // If no answer is selected, return
+      if (!selectedAnswer) return;
+
+      if (selectedAnswer === correctAnswer) {
+        // Correct answer
+        selectedAnswer.classList.remove('selected');
+        selectedAnswer.classList.add('correct');
+        checkButton.textContent = 'הבא';
+      } else {
+        // Wrong answer
+        selectedAnswer.classList.remove('selected');
+        selectedAnswer.classList.add('wrong');
+        checkButton.textContent = 'בדיקה נוספת';
+
+        // Disable the wrong answer so it can't be selected again
+        selectedAnswer.style.pointerEvents = 'none';
+      }
+    }
+
+    // Initialize the event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      handleSelectedAnswer();
+
+      const checkButton = document.getElementById('check-btn');
+      checkButton.addEventListener('click', checkMultipulChoice);
+    });
+  </script>
+  
+</html>

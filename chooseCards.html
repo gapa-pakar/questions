@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Selection Question</title>
+    <style>
+        @font-face {
+            font-family: "Assistant";
+            src: url("assets/fonts/Assistant/Assistant-Regular.ttf");
+        }
+
+        /* General body styling */
+        body {
+            font-family: "Assistant", sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-size: calc(1vh + 1vw + 8px);
+        }
+
+        /* Question text styling */
+        #question {
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        /* Container for the cards */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* 5 cards per row */
+            gap: 1rem;
+            width: 80%;
+            justify-items: center;
+        }
+
+        /* Card default styling */
+        .card {
+            width: 12rem;
+            height: 6rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: 2px solid white;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            text-align: center;
+            font-size: 1rem;
+            padding: 0.5rem;
+        }
+
+        /* Selected card */
+        .selected {
+            background-color: rgba(103, 169, 255, 0.5);
+            border-color: rgba(103, 169, 255, 0.5);
+        }
+
+        /* Correctly selected answer */
+        .correct {
+            background-color: rgba(61, 223, 115, 0.5);
+            border-color: rgb(61, 223, 115);
+        }
+
+        @keyframes blink {
+            0%, 100% { background-color: rgba(252, 90, 90, 0.5); border-color: rgb(252, 90, 90); }
+            50% { background-color: rgba(255, 255, 255, 0.5); border-color: white; }
+        }
+
+        .wrong {
+            animation: blink 0.75s ease-in-out 3; /* 3 times of 0.75s */
+        }
+
+
+        /* Check button styling */
+        #check-btn {
+            font-family: "Assistant", sans-serif;
+            font-weight: 600;
+            border: 2px solid white;
+            border-radius: 3rem;
+            background-color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            padding: 0.5rem 1.5rem;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+
+        /* Error message styling */
+        .error {
+            color: red;
+            font-size: 1rem;
+            margin-top: 1rem;
+            display: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Question -->
+    <div id="question">אילו שני גופים אוחדו בשנת 2016 לחטיבת החילוץ וההדרכה כפי שהיא היום?</div>
+
+    <!-- Card Container -->
+    <div class="card-container">
+        <div id="ans1" class="card">בה''ד 16</div>
+        <div id="ans2" class="card">מפקדה משימתית</div>
+        <div id="ans3" class="card">גדוד שחר</div>
+        <div id="ans4" class="card">מחוז מרכז</div>
+        <div id="ans5" class="card">מחוז צפון</div>
+        <div id="ans6" class="card">מפקדת אלון</div>
+        <div id="ans7" class="card">ענף מפקדים</div>
+        <div id="ans8" class="card">נפה 60 (הנפה הסדירה)</div>
+        <div id="ans9" class="card">בה''ד 10</div>
+        <div id="ans10" class="card">ענף מקצועות</div>
+    </div>
+
+    <!-- Check button -->
+    <button id="check-btn">בדוק</button>
+
+    <!-- Error message -->
+    <div class="error" id="error-msg">עליכם לבחור 2 תשובות בלבד</div>
+
+    <script>
+        // Selected answers
+        let selectedCards = [];
+        let correctAnswersSelected = 0;
+        const correctAnswers = ['ans1', 'ans8'];
+        let questionFinished = false; // Flag to track if the question is finished
+
+        // Handle card selection and deselection
+        function handleSelection(card) {
+            if (card.classList.contains('selected')) {
+                // Deselect the card if it is already selected
+                card.classList.remove('selected');
+                selectedCards = selectedCards.filter(c => c !== card.id);
+            } else {
+                // If there are already two selected cards, deselect the first one
+                if (selectedCards.length === 2) {
+                    const firstSelected = selectedCards.shift(); // Remove the first selected card
+                    document.getElementById(firstSelected).classList.remove('selected');
+                }
+                // Select the new card
+                card.classList.add('selected');
+                selectedCards.push(card.id);
+            }
+
+            // Hide error message when card is selected
+            const errorMsg = document.getElementById('error-msg');
+            if (errorMsg.style.display === 'block') {
+                errorMsg.style.display = 'none';
+            }
+        }
+
+        // Check the selected answers
+        function checkAnswers() {
+            const checkBtn = document.getElementById('check-btn');
+            const errorMsg = document.getElementById('error-msg');
+
+            if (selectedCards.length < 2) {
+                errorMsg.style.display = 'block';
+                // Deselect all selected cards
+                selectedCards.forEach(cardId => {
+                    document.getElementById(cardId).classList.remove('selected');
+                });
+                selectedCards = []; // Clear selected cards
+                // Hide the error message after 10 seconds
+                setTimeout(() => {
+                    errorMsg.style.display = 'none';
+                }, 10000);
+                return;
+            }
+
+            // Check if both selected cards are correct
+            const bothCorrect = selectedCards.every(cardId => correctAnswers.includes(cardId));
+
+            if (bothCorrect) {
+                // If both answers are correct
+                const checkBtn = document.getElementById('check-btn');
+                checkBtn.textContent = 'הבא'; // Change button text to "הבא"
+                questionFinished = true; // Set flag to indicate the question is finished
+                selectedCards = []; // Clear selected cards
+            } else {
+                // If either answer is wrong, apply the blink animation
+                selectedCards.forEach(cardId => {
+                    const card = document.getElementById(cardId);
+                    card.classList.add('wrong'); // Add the wrong class for animation
+
+                    // Remove the selected class to reset the appearance
+                    card.classList.remove('selected');
+                });
+
+                // Allow re-selection after the animation duration
+                setTimeout(() => {
+                    selectedCards.forEach(cardId => {
+                        const card = document.getElementById(cardId);
+                        card.classList.remove('wrong'); // Remove the wrong class
+                        card.style.pointerEvents = 'auto'; // Re-enable selection
+                    });
+                    selectedCards = []; // Clear selected cards
+                }, 2250); // Duration of 3 cycles of 0.75s animation (0.75 * 3)
+            }
+        }
+
+        // Attach event listeners to the cards
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', () => handleSelection(card));
+        });
+
+        // Attach event listener to the check button
+        document.getElementById('check-btn').addEventListener('click', () => {
+            const checkBtn = document.getElementById('check-btn');
+            if (questionFinished && checkBtn.textContent === 'הבא') {
+                alert("finished question"); // Alert when the user clicks the button with the text "הבא"
+            } else {
+                checkAnswers(); // Check answers if not finished
+            }
+        });
+
+    </script>
+</body>
+</html>
