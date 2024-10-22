@@ -89,28 +89,39 @@
 <body>
   <div id="page">
     <div id="question-container">
-        <div class="question-title">מתי הוקם פיקוד העורף?</div>
+        <!-- <div class="question-title">מתי הוקם פיקוד העורף?</div>
         <div id="ans-container">
             <div id="ans1" class="answer">1992</div>
             <div id="ans2" class="answer">1990</div>
             <div id="ans3" class="answer">2016</div>
             <div id="ans4" class="answer">1982</div>
+        </div> -->
+        <div class="question-title">בעקבות איזה אירוע הוחלט על הקמת פיקוד העורף?</div>
+        <div id="ans-container">
+            <div id="ans1" class="answer">מלחמת ששת הימים</div>
+            <div id="ans2" class="answer">מלחמת שלום הגליל</div>
+            <div id="ans3" class="answer">מלחמת המפרץ</div>
+            <div id="ans4" class="answer">פעולות התגמול</div>
         </div>
         <button id="check-btn">בדיקה</button>
     </div>
   </div>
-
+  
 </body>
 <script>
-    // Handle selecting and deselecting answers
-    function handleSelectedAnswer() {
-      const answers = document.querySelectorAll('.answer');
-      let selectedAnswer = null;
+  // Handle selecting and deselecting answers
+  let currPage = 41;
+  let american1Finished = false;
 
+  
+  function handleSelectedAnswer() {
+    const answers = document.querySelectorAll('.answer');
+      let selectedAnswer = null;
+      
       answers.forEach(answer => {
         answer.addEventListener('click', (event) => {
           event.stopPropagation(); // Prevent the click from bubbling to the body
-
+          
           // If the clicked answer is already selected, deselect it
           if (selectedAnswer === answer) {
             answer.classList.remove('selected');
@@ -127,7 +138,7 @@
           }
         });
       });
-
+      
       // Deselect any selected answer if a non-answer element is clicked
       document.addEventListener('click', (event) => {
         if (!event.target.classList.contains('answer')) {
@@ -142,17 +153,21 @@
     // Check if the selected answer is correct
     function checkMultipulChoice() {
       const selectedAnswer = document.querySelector('.selected');
-      const correctAnswer = document.getElementById('ans1');
+      const correctAmerican1 = document.getElementById('ans1');
+      const correctAmerican2 = document.getElementById('ans3');
+      const correctAmerican3 = document.getElementById('ans2');
+      const correctAmerican4 = document.getElementById('ans4');
       const checkButton = document.getElementById('check-btn');
-
+      
       // If no answer is selected, return
       if (!selectedAnswer) return;
-
-      if (selectedAnswer === correctAnswer) {
+      
+      if (currPage === 17 && selectedAnswer === correctAmerican1 || currPage === 18 && selectedAnswer === correctAmerican2 || currPage === 21 && selectedAnswer === correctAmerican3 || currPage === 41 && selectedAnswer === correctAmerican4) {
         // Correct answer
         selectedAnswer.classList.remove('selected');
         selectedAnswer.classList.add('correct');
         checkButton.textContent = 'הבא';
+
       } else {
         // Wrong answer
         selectedAnswer.classList.remove('selected');

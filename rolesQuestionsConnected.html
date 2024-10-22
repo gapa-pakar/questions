@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl"> <!-- Set the page direction to RTL -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Drag and Drop Questions</title>
+    <style>
+        @font-face {
+            font-family: "Assistant";
+            src: url("assets/fonts/Assistant/Assistant-Regular.ttf");
+        }
+
+        /* General body styling */
+        body {
+            font-family: "Assistant", sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-size: calc(1.1vh + 1.1vw + 10px); /* Increased font size */
+            text-align: center;
+        }
+
+        /* Question text styling */
+        #question {
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+
+        /* Sentence styling */
+        .sentence {
+            font-size: 1.5rem; /* Increased font size */
+            margin: 1rem 0; /* Added margin for spacing */
+            padding: 1rem; /* Added padding for better layout */
+            line-height: 1.5; /* Added line height for spacing between lines */
+            background-color: transparent; /* Removed white background */
+            width: 80%; /* Set width for the sentence */
+        }
+
+        /* Drop zone styling */
+        .drop-zone {
+            display: inline-block; /* Maintain the inline-block display */
+            width: 10rem; /* Width of drop zone */
+            height: 2rem; /* Height of drop zone */
+            border: 2px solid #ccc; /* Solid border */
+            border-radius: 0.5rem;
+            margin: 0 0.5rem; /* Spacing between drop zones */
+            background-color: rgba(255, 255, 255, 0.9); /* Set background to white */
+            vertical-align: middle;
+            font-size: 1rem; /* Ensure font size is consistent */
+            text-align: center; /* Center text in drop zones */
+            line-height: 2rem; /* Center text vertically */
+        }
+
+        /* Word bank container styling */
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            border: 2px solid #ccc; /* Added border to word bank */
+            border-radius: 0.5rem; /* Rounded corners */
+            padding: 1rem; /* Added padding */
+            background-color: rgba(255, 255, 255, 0.7); /* Slight background color */
+            max-width: 600px; /* Set max width for word bank */
+        }
+
+        /* Word bank item styling */
+        .word {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: 2px solid white;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            cursor: grab;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Word hover effect */
+        .word:hover {
+            background-color: rgba(200, 200, 200, 0.5);
+        }
+
+        /* Next button styling */
+        #next-btn {
+            font-family: "Assistant", sans-serif;
+            font-weight: 600;
+            border: 2px solid white;
+            border-radius: 3rem;
+            background-color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            padding: 0.5rem 1.5rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            display: none; /* Hide the button initially */
+        }
+
+        /* Drop zone container styling */
+        .drop-zone-container {
+            display: flex;
+            justify-content: space-around; /* Space out the drop zones */
+            width: 90%; /* Set width for the container */
+            margin: 1rem 0; /* Added margin for spacing */
+        }
+
+        /* Drop zone title styling */
+        .drop-zone-title {
+            margin-bottom: 0.5rem; /* Space between title and drop zone */
+            font-weight: bold; /* Make the title bold */
+        }
+
+        /* Additional drop zone styling for task organization */
+        .task-drop-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align items to the top */
+            width: 40%; /* Width of drop zones */
+            height: auto; /* Set height to auto to allow it to grow */
+            min-height: 10rem; /* Minimum height */
+            border: 2px solid #ccc; /* Solid border */
+            border-radius: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.9); /* Set background to white */
+            margin: 0 1rem; /* Spacing between drop zones */
+            padding: 1rem; /* Added padding */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
+        }
+    </style>
+</head>
+<body>
+    <div id="question-33">
+        <!-- Question for Sentence Completion -->
+        <div class="question">השלימו את המשפט בעזרת מחסן המילים</div>
+    
+        <!-- Sentence with drop zones for the first question -->
+        <div class="sentence" id="sentence">
+            חטיבת החילוץ וההדרכה תהווה גוף <span class="connective-letter">ל</span><span class="drop-zone" id="drop1"></span> של מערך הלחימה בפקע"ר, 
+            <span class="drop-zone" id="drop2"></span> <span class="connective-letter">ו</span><span class="drop-zone" id="drop3"></span> את מסגרות פקע"ר 
+            <span class="connective-letter">ב</span><span class="drop-zone" id="drop4"></span> <span class="connective-letter">וב</span><span class="drop-zone" id="drop5"></span> בתחומי 
+            <span class="connective-letter">ה</span><span class="drop-zone" id="drop6"></span> <span class="connective-letter">וה</span><span class="drop-zone" id="drop7"></span>
+        </div>
+    
+        <!-- Word Bank for Sentence Completion -->
+        <div class="word-bank" id="word-bank">
+            <!-- Words will be populated here -->
+        </div>
+    
+        <!-- Next button for Sentence Completion -->
+        <button id="next-btn">הבא</button>
+    </div>
+    
+    <div id="task-question" style="display:none;">
+        <!-- Question for Task Organization -->
+        <div class="question">סדרו את תפקידי החטיבה בהתאם לתפקידיה בשגרה ובחירום</div>
+    
+        <!-- Drop zone containers for Task Organization -->
+        <div class="drop-zone-container" id="task-drop-zone-container" style="display:none;">
+            <div class="task-drop-zone" id="routine-zone">
+                <div class="drop-zone-title">שגרה</div>
+            </div>
+            <div class="task-drop-zone" id="emergency-zone">
+                <div class="drop-zone-title">חירום</div>
+            </div>
+        </div>
+    
+        <!-- Word Bank for Task Organization -->
+        <div class="word-bank" id="task-word-bank">
+            <div class="word" id="task1">לשמש בניין הכוח של גדודי החילוץ וההצלה הסדירים, בא''ח, ביה''ס לפיקוד ולמקצועות העורף ובסיס אימון יחידות פיקודי</div>
+            <div class="word" id="task2">לפתח ידע מקצועי בעולמות החילוץ והאב''כ</div>
+            <div class="word" id="task3">לאמן ולשמר כשירות למסגרות המילואים בפיקוד בהתאם למחזוריות האימונים</div>
+            <div class="word" id="task4">פו"ש על אירועי חילוץ, הצלה, בלתי קונבנציונליים ופינוי אוכלוסיה</div>
+            <div class="word" id="task5">לתגבר את מרכז המידע הפיקודי וביצוע משימות סיוע אזרחי</div>
+            <div class="word" id="task6">לבצע אימונים והכשרות במסגרת תכנית 'זמן יקר'</div>
+        </div>
+    </div>
+
+    <script>
+        let currPage = 33; // Initial page number
+        const wordBankContent = [
+        {id: 'word1', text: 'חילוץ'},
+            {id: 'word2', text: 'תכשיר'},
+            {id: 'word3', text: 'בניין כוח'},
+            {id: 'word4', text: 'לחימה'},
+            {id: 'word5', text: 'סדיר'},
+            {id: 'word6', text: 'תאמן'},
+            {id: 'word7', text: 'אב״כ'},
+            {id: 'word8', text: 'מילואים'},
+            {id: 'word9', text: 'בתוך'},
+            {id: 'word10', text: 'מחוץ'},
+            {id: 'word11', text: 'הארץ'},
+            {id: 'word12', text: 'חטיבה'},
+            {id: 'word13', text: 'חילוץ והצלה'},
+            {id: 'word14', text: 'כתום'},
+            {id: 'word15', text: 'בשגרה'},
+            {id: 'word16', text: 'במרחב האזרחי'},
+            {id: 'word17', text: 'מפקדה משימתית'},
+            {id: 'word18', text: 'מלחמה'}
+        ];
+
+        // Populate word bank for sentence completion
+        const wordBank = document.getElementById("word-bank");
+        wordBankContent.forEach(word => {
+            const wordDiv = document.createElement("div");
+            wordDiv.className = "word";
+            wordDiv.id = word.id;
+            wordDiv.textContent = word.text;
+            wordDiv.draggable = true;
+            wordDiv.addEventListener("dragstart", dragStart);
+            wordBank.appendChild(wordDiv);
+        });
+
+        // Handle drag start event
+        function dragStart(e) {
+            e.dataTransfer.setData("text/plain", e.target.id);
+        }
+
+        // Handle drop event on drop zones
+        document.querySelectorAll(".drop-zone").forEach(dropZone => {
+            dropZone.addEventListener("dragover", dragOver);
+            dropZone.addEventListener("drop", drop);
+        });
+
+        // Allow dropping
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        // Handle drop logic
+        function drop(e) {
+            e.preventDefault();
+            const wordId = e.dataTransfer.getData("text/plain");
+            const wordElement = document.getElementById(wordId);
+            if (wordElement) {
+                e.target.textContent = wordElement.textContent;
+                e.target.classList.add("filled");
+                wordElement.style.display = "none"; // Hide the word from the bank
+                checkCompletion(); // Check if all drop zones are filled
+            }
+        }
+
+        // Check if all drop zones are filled
+        function checkCompletion() {
+            const dropZones = document.querySelectorAll(".drop-zone");
+            const filledZones = document.querySelectorAll(".drop-zone.filled");
+            if (dropZones.length === filledZones.length) {
+                document.getElementById("next-btn").style.display = "block"; // Show next button
+            }
+        }
+
+        // Handle Next button click
+        document.getElementById("next-btn").addEventListener("click", function() {
+            currPage++;
+            if (currPage === 35) {
+                document.getElementById("question-33").style.display = "none"; // Hide current question
+                wordBank.style.display = "none"; // Hide word bank
+                document.getElementById("task-question").style.display = "block"; // Show task question
+                document.getElementById("task-drop-zone-container").style.display = "flex"; // Show drop zones for task
+                document.getElementById("task-word-bank").style.display = "flex"; // Show task word bank
+            } else {
+                document.getElementById('sentence').innerHTML = `
+                    מפקדת החטיבה תשמש כ<span class="drop-zone" id="drop1"></span> בחירום ובתוך כך תפעל באירועי חילוץ והצלה בכל זירות ה
+                    <span class="drop-zone" id="drop2"></span>, לרבות <span class="drop-zone" id="drop3"></span> גבולות מדינת ישראל ותפקד על מבצעים 
+                    <span class="drop-zone" id="drop4"></span> ברגיעה ובלחימה.
+                `;
+                correctPairs = correctPairsPage34;
+            }
+        });
+
+        // Handle drag and drop for task organization
+        const taskWordBank = document.getElementById("task-word-bank");
+        const taskWords = taskWordBank.getElementsByClassName("word");
+        
+        for (const taskWord of taskWords) {
+            taskWord.draggable = true;
+            taskWord.addEventListener("dragstart", dragStartTask);
+        }
+
+        // Handle drag start event for task organization
+        function dragStartTask(e) {
+            e.dataTransfer.setData("text/plain", e.target.id);
+        }
+
+        // Handle drop event on task drop zones
+        document.querySelectorAll(".task-drop-zone").forEach(dropZone => {
+            dropZone.addEventListener("dragover", dragOver);
+            dropZone.addEventListener("drop", dropTask);
+        });
+
+        // Handle drop logic for task organization
+        function dropTask(e) {
+            e.preventDefault();
+            const wordId = e.dataTransfer.getData("text/plain");
+            const wordElement = document.getElementById(wordId);
+            if (wordElement) {
+                e.target.appendChild(wordElement); // Append the word to the drop zone
+                wordElement.style.display = "block"; // Show the word in the drop zone
+            }
+        }
+    </script>
+</body>
+</html>

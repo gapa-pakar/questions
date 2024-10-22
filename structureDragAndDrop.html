@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structure Tree Drag and Drop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .structure-tree-img {
+            height: 20rem;
+            position: absolute;
+            left: 50%;
+            top: 4rem;
+            transform: translateX(-50%);
+        }
+
+        .st-structure {
+            height: 9.5rem;
+            position: absolute;
+            left: 51.5%;
+            top: 8.3rem;
+            transform: translateX(-50%);
+        }
+
+        .drop-zone {
+            border: 2px solid white;
+            background-color: rgba(255, 255, 255, 0.5);
+            position: absolute;
+            z-index: 1;
+        }
+
+        .st-hativa-zone {
+            top: 3rem;
+            width: 3rem;
+            height: 3rem;
+            left: 50.5%;
+            transform: translateX(-50%);
+        }
+
+        .st-baf-zone {
+            top: 11rem;
+            width: 5rem;
+            height: 5rem;
+            left: 58.3%;
+            transform: translateX(10px);
+        }
+
+        .st-bah-zone {
+            top: 10.9rem;
+            width: 3.9rem;
+            height: 3.9rem;
+            left: 76.3%;
+            transform: translateX(-50%);
+        }
+
+        .st-matachim-zone {
+            top: 10.9rem;
+            width: 3.6rem;
+            height: 3.6rem;
+            left: 35.7%;
+            transform: translateX(10px);
+        }
+
+        .st-school-zone {
+            top: 11rem;
+            width: 7rem;
+            height: 7rem;
+            left: 19.1%;
+            transform: translateX(10px);
+        }
+
+        .st-gdudim-zone {
+            top: 18rem;
+            width: 19.3rem;
+            height: 3rem;
+            left: 50.5%;
+            transform: translateX(-50%);
+        }
+
+        .image-bank {
+            display: flex;
+            justify-content: center;
+            position: absolute;
+            bottom: 2rem;
+            width: 100%;
+        }
+
+        .draggable {
+            width: 5rem;
+            margin: 0.5rem;
+            cursor: grab;
+        }
+
+        .button-container {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        #next-btn {
+            font-size: 1.5rem;
+            padding: 0.5rem 2rem;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <img src="assets/images/ST-structure.svg" id="st-structure" class="st-structure" alt="Structure">
+
+    <!-- Drop Zones for the images -->
+    <div id="st-hativa-zone" class="drop-zone st-hativa-zone"></div>
+    <div id="st-baf-zone" class="drop-zone st-baf-zone"></div>
+    <div id="st-bah-zone" class="drop-zone st-bah-zone"></div>
+    <div id="st-matachim-zone" class="drop-zone st-matachim-zone"></div>
+    <div id="st-school-zone" class="drop-zone st-school-zone"></div>
+    <div id="st-gdudim-zone" class="drop-zone st-gdudim-zone"></div>
+
+    <!-- Image Bank at the bottom -->
+    <div class="image-bank">
+        <img src="assets/images/ST-hativa-command.svg" id="st-hativa" class="draggable" draggable="true" alt="Hativa Command">
+        <img src="assets/images/ST-baf.svg" id="st-baf" class="draggable" draggable="true" alt="BAF">
+        <img src="assets/images/ST-bah.svg" id="st-bah" class="draggable" draggable="true" alt="BAH">
+        <img src="assets/images/ST-matachim.svg" id="st-matachim" class="draggable" draggable="true" alt="Matachim">
+        <img src="assets/images/ST-school.svg" id="st-school" class="draggable" draggable="true" alt="School">
+        <img src="assets/images/ST-gdudim.svg" id="st-gdudim" class="draggable" draggable="true" alt="Gdudim">
+    </div>
+
+    <!-- Button that appears after correct drops -->
+    <div class="button-container">
+        <button id="next-btn">המשך</button>
+    </div>
+
+    <script>
+        const dropZones = {
+            'st-hativa': 'st-hativa-zone',
+            'st-baf': 'st-baf-zone',
+            'st-bah': 'st-bah-zone',
+            'st-matachim': 'st-matachim-zone',
+            'st-school': 'st-school-zone',
+            'st-gdudim': 'st-gdudim-zone'
+        };
+
+        let correctlyPlaced = 0;
+
+        document.querySelectorAll('.draggable').forEach(img => {
+            img.addEventListener('dragstart', dragStart);
+        });
+
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', dragOver);
+            zone.addEventListener('drop', drop);
+        });
+
+        function dragStart(event) {
+            event.dataTransfer.setData('text', event.target.id);
+        }
+
+        function dragOver(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            const draggedImageId = event.dataTransfer.getData('text');
+            const dropZoneId = event.target.id;
+
+            // Check if the image is being dropped in the correct zone
+            if (dropZones[draggedImageId] === dropZoneId) {
+                const img = document.getElementById(draggedImageId);
+                event.target.appendChild(img); // Move image to drop zone
+                img.style.position = 'static'; // Remove positioning so it stays inside the drop zone
+                img.draggable = false; // Disable dragging for correctly placed image
+                correctlyPlaced++; // Increment the counter for correctly placed images
+
+                // Check if all images are placed correctly
+                if (correctlyPlaced === Object.keys(dropZones).length) {
+                    document.querySelector('.image-bank').style.display = 'none'; // Hide the image bank
+                    document.querySelector('.button-container').style.display = 'block'; // Show the next button
+                }
+            }
+        }
+
+        // Add functionality to the button
+        document.getElementById('next-btn').addEventListener('click', () => {
+            alert('structure finished');
+        });
+    </script>
+</body>
+</html>

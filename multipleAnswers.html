@@ -103,7 +103,7 @@
 <body>
   <div id="page">
     <div id="question-container">
-      <div class="question-title">מהם תפקידי החטיבה בשגרה? יכולה להיות יותר מתשובה אחת</div>
+      <div class="question-title" id="question-title">מהם תפקידי החטיבה בשגרה? יכולה להיות יותר מתשובה אחת</div>
       <div id="ans-container">
         <div id="ans1" class="answer-cont">
           <span class="answer"></span>
@@ -132,9 +132,10 @@
   </div>
 
   <script>
-    // Declare global variables for correct answers count and the total correct count
+    // Declare global variables for correct answers count
     let correctSelectedCount = 0;
-    const totalCorrect = 3; // Number of correct answers
+    let totalCorrect = 3; // Number of correct answers for the first question
+    let isSecondQuestion = false; // Flag for the second question
 
     // Handle answer selection
     function handleSelection() {
@@ -159,7 +160,7 @@
 
     // Check the selected answers
     function checkAnswers() {
-      const correctAnswers = ['ans1', 'ans2', 'ans4'];
+      const correctAnswers = isSecondQuestion ? ['ans2', 'ans5'] : ['ans1', 'ans2', 'ans4'];
       const selectedAnswers = document.querySelectorAll('.selected');
       const checkButton = document.getElementById('check-btn');
       const error = document.querySelector('.error');
@@ -170,6 +171,9 @@
         return;
       }
 
+      // Reset the count of correct answers selected in each check
+      correctSelectedCount = 0;
+
       // Iterate over selected answers and check if they are correct
       selectedAnswers.forEach(answer => {
         const parentID = answer.parentElement.id;
@@ -177,7 +181,7 @@
           // Correct answer
           answer.classList.remove('selected');
           answer.classList.add('correct');
-          correctSelectedCount++; // Increase the global count of correct answers
+          correctSelectedCount++; // Increase the correct answer count
         } else {
           // Wrong answer
           answer.classList.remove('selected');
@@ -188,7 +192,7 @@
         answer.style.pointerEvents = 'none';
       });
 
-      // Check if all correct answers were selected across multiple tries
+      // Check if all correct answers were selected
       if (correctSelectedCount >= totalCorrect) {
         checkButton.textContent = 'הבא';
         document.querySelectorAll('.answer').forEach(answer => {
@@ -199,12 +203,62 @@
       }
     }
 
+    // Load new question
+    function loadNewQuestion() {
+      const questionTitle = document.getElementById('question-title');
+      const ansContainer = document.getElementById('ans-container');
+      const checkButton = document.getElementById('check-btn');
+
+      // Clear previous selections
+      correctSelectedCount = 0;
+      document.querySelectorAll('.answer').forEach(answer => {
+        answer.classList.remove('correct', 'wrong', 'selected');
+        answer.style.pointerEvents = 'auto';
+      });
+
+      // Set new question and answers
+      questionTitle.textContent = 'מהם תפקידי חטיבת החילוץ וההדרכה בשגרה? יכולה להיות יותר מתשובה אחת';
+      ansContainer.innerHTML = `
+        <div id="ans1" class="answer-cont">
+          <span class="answer"></span>
+          <span>לשמש כח כוננות מיידי לאירועי חילוץ, הצלה ואב"כ.</span>
+        </div>
+        <div id="ans2" class="answer-cont">
+          <span class="answer"></span>
+          <span>לדאוג לאבטחתו של בית הסוהר מגידו בשגרה ובחירום.</span>
+        </div>
+        <div id="ans3" class="answer-cont">
+          <span class="answer"></span>
+          <span>לשלח גדודים ולאמן מסגרות תוך כדי תעסוקה מבצעית.</span>
+        </div>
+        <div id="ans4" class="answer-cont">
+          <span class="answer"></span>
+          <span>חיזוק החוסן הלאומי והצלת חיים בשגרה.</span>
+        </div>
+        <div id="ans5" class="answer-cont">
+          <span class="answer"></span>
+          <span>להכשיר את מקצועות העורף בסדיר ובמילואים ואת מערך הלחימה בפקע"ר.</span>
+        </div>
+      `;
+
+      isSecondQuestion = true;
+      totalCorrect = 2; // Set total correct answers for second question
+      checkButton.textContent = 'בדיקה'; // Reset button text
+      handleSelection(); // Reinitialize selection event listeners
+    }
+
     // Initialize event listeners
     document.addEventListener('DOMContentLoaded', () => {
       handleSelection();
 
       const checkButton = document.getElementById('check-btn');
-      checkButton.addEventListener('click', checkAnswers);
+      checkButton.addEventListener('click', () => {
+        if (checkButton.textContent === 'הבא') {
+          loadNewQuestion();
+        } else {
+          checkAnswers();
+        }
+      });
     });
   </script>
   

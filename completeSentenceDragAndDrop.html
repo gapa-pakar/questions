@@ -97,7 +97,8 @@
             font-size: 0.8rem;
             padding: 0.5rem 1.5rem;
             cursor: pointer;
-            margin-top: 1rem; /* Added margin on top of button */
+            margin-top: 1rem;
+            display: none; /* Hide the button initially */
         }
 
         /* Connective letters styling */
@@ -112,106 +113,192 @@
     <div id="question">השלימו את המשפט בעזרת מחסן המילים</div>
 
     <!-- Sentence with drop zones -->
-    <div class="sentence">
-        חטיבת החילוץ וההדרכה תהווה גוף <span class="connective-letter">ל</span><span class="drop-zone" id="drop1"></span> של מערך הלחימה בפקע"ר, 
-        <span class="drop-zone" id="drop2"></span> <span class="connective-letter">ו</span><span class="drop-zone" id="drop3"></span> את מסגרות פקע"ר 
-        <span class="connective-letter">ב</span><span class="drop-zone" id="drop4"></span> <span class="connective-letter">וב</span><span class="drop-zone" id="drop5"></span> בתחומי 
-        <span class="connective-letter">ה</span><span class="drop-zone" id="drop6"></span> <span class="connective-letter">וה</span><span class="drop-zone" id="drop7"></span>
+    <div class="sentence" id="sentence">
+        <!-- First question sentence -->
+        <span> חטיבת החילוץ וההדרכה תהווה גוף </span>
+        <span class="connective-letter"> ל</span>
+        <span class="drop-zone" id="drop1"></span>
+        <span> של מערך הלחימה בפקע''ר, </span>
+        <span class="drop-zone" id="drop2"></span>
+         <span class="connective-letter">ו</span>
+         <span class="drop-zone" id="drop3"></span>
+         <span> את מסגרות פקע''ר </span>
+        <span class="connective-letter"> ב</span>
+        <span class="drop-zone" id="drop4"></span>
+         <span class="connective-letter"> וב</span>
+         <span class="drop-zone" id="drop5"></span>
+         <span> בתחומי </span>
+        <span class="connective-letter"> ה</span>
+        <span class="drop-zone" id="drop6"></span>
+         <span class="connective-letter"> וה</span>
+         <span class="drop-zone" id="drop7"></span>
     </div>
 
     <!-- Word Bank -->
-    <div class="word-bank">
-        <div class="word" id="word1">חילוץ</div>
-        <div class="word" id="word2">תכשיר</div>
-        <div class="word" id="word3">בניין כוח</div>
-        <div class="word" id="word4">לחימה</div>
-        <div class="word" id="word5">סדיר</div>
-        <div class="word" id="word6">תאמן</div>
-        <div class="word" id="word7">אב״כ</div>
-        <div class="word" id="word8">מילואים</div>
-        <div class="word" id="word9">בתוך</div>
-        <div class="word" id="word10">מחוץ</div>
-        <div class="word" id="word11">הארץ</div>
-        <div class="word" id="word12">חטיבה</div>
-        <div class="word" id="word13">חילוץ והצלה</div>
-        <div class="word" id="word14">כתום</div>
-        <div class="word" id="word15">בשגרה</div>
-        <div class="word" id="word16">במרחב האזרחי</div>
+    <div class="word-bank" id="word-bank">
+        <!-- Words will be populated here -->
     </div>
 
     <!-- Next button -->
     <button id="next-btn">הבא</button>
 
     <script>
-        // Drag and drop functionality
-        const words = document.querySelectorAll('.word');
-        const dropZones = document.querySelectorAll('.drop-zone');
-    
-        // Add drag events to words
-        words.forEach(word => {
-            word.setAttribute('draggable', 'true');
-    
-            word.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', e.target.id); // Set the id of the dragged word
-                e.target.style.opacity = '0.5'; // Make the word slightly transparent
-            });
-    
-            word.addEventListener('dragend', (e) => {
-                e.target.style.opacity = ''; // Reset opacity when drag ends
-            });
-        });
-    
-        // Add drag events to drop zones
-        dropZones.forEach(zone => {
-            zone.addEventListener('dragover', (e) => {
-                e.preventDefault(); // Prevent default to allow drop
-            });
-    
-            zone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                const wordId = e.dataTransfer.getData('text/plain');
-                const word = document.getElementById(wordId);
-    
-                // Check if the word is dropped in the correct zone
-                if (isCorrectDrop(zone.id, wordId)) {
-                    // Clear all styles from the word
-                    word.style.backgroundColor = ''; // Remove background color
-                    word.style.border = ''; // Remove border
-                    word.style.padding = ''; // Remove padding
-                    word.style.margin = ''; // Remove margin
-                    word.style.display = 'inline'; // Ensure it behaves as inline
-                    word.style.lineHeight = 'normal'; // Reset line height
-                    word.style.textAlign = 'center'; // Center text in the drop zone
-                    
-                    // Center the word inside the drop zone
-                    zone.innerHTML = ''; // Clear any existing content in the drop zone
-                    zone.appendChild(word); // Move word to the drop zone
-                    word.setAttribute('draggable', 'false'); // Make the word undraggable
-                    zone.style.textAlign = 'center'; // Center text in drop zone
-                    zone.style.lineHeight = '2rem'; // Match line height for vertical centering
-                    word.style.border = 'none'; // Ensure border is removed
-                    word.style.backgroundColor = 'transparent'; // Ensure background is transparent
-                } else {
-                    // Return word to the word bank if dropped incorrectly
-                    word.style.opacity = '1'; // Reset opacity
-                    document.querySelector('.word-bank').appendChild(word); // Move word back to word bank
+        let currPage = 33; // Initial page number
+
+        const wordBankContent = [
+            {id: 'word1', text: 'חילוץ'},
+            {id: 'word2', text: 'תכשיר'},
+            {id: 'word3', text: 'בניין כוח'},
+            {id: 'word4', text: 'לחימה'},
+            {id: 'word5', text: 'סדיר'},
+            {id: 'word6', text: 'תאמן'},
+            {id: 'word7', text: 'אב״כ'},
+            {id: 'word8', text: 'מילואים'},
+            {id: 'word9', text: 'בתוך'},
+            {id: 'word10', text: 'מחוץ'},
+            {id: 'word11', text: 'הארץ'},
+            {id: 'word12', text: 'חטיבה'},
+            {id: 'word13', text: 'חילוץ והצלה'},
+            {id: 'word14', text: 'כתום'},
+            {id: 'word15', text: 'בשגרה'},
+            {id: 'word16', text: 'במרחב האזרחי'},
+            {id: 'word17', text: 'מפקדה משימתית'},
+            {id: 'word18', text: 'מלחמה'}
+        ];
+
+        const correctPairsPage33 = {
+            'drop1': 'word3',
+            'drop2': 'word2',
+            'drop3': 'word6',
+            'drop4': 'word5',
+            'drop5': 'word8',
+            'drop6': 'word1',
+            'drop7': 'word7'
+        };
+
+        const correctPairsPage34 = {
+            'drop1': 'word17',
+            'drop2': 'word18',
+            'drop3': 'word10',
+            'drop4': 'word16'
+        };
+
+        let correctPairs = correctPairsPage33; // Start with page 33 pairs
+        let dropZones = document.querySelectorAll('.drop-zone');
+        let nextButton = document.getElementById('next-btn');
+
+        function allowDrop(event) {
+            event.preventDefault(); // Allow the drop action
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData('text', event.target.id); // Store the word ID being dragged
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const dropZoneId = event.target.id; // Get the drop zone ID
+            const wordId = event.dataTransfer.getData('text'); // Get the dragged word's ID
+            const droppedElement = document.getElementById(wordId); // Select the dragged word element
+
+            // Ensure that the drop happens only in empty drop zones and correct zones
+            if (!event.target.hasChildNodes() && correctPairs[dropZoneId] === wordId) {
+                // If correct pair, drop it and remove styling
+                droppedElement.classList.remove('word');
+                droppedElement.style.backgroundColor = 'transparent';
+                droppedElement.style.border = 'none';
+                droppedElement.style.padding = '0';
+                droppedElement.style.cursor = 'default';
+
+                // Move the word into the correct drop zone and disable dragging
+                event.target.appendChild(droppedElement);
+                droppedElement.setAttribute('draggable', 'false');
+                event.target.style.pointerEvents = 'none'; // Disable further interaction with the drop zone
+
+                // Check if all drop zones are correctly filled
+                checkCompletion();
+            } else {
+                // If not correct, return the word to the word bank
+                const wordBank = document.querySelector('.word-bank');
+                wordBank.appendChild(droppedElement);
+            }
+        }
+
+        function checkCompletion() {
+            let allFilled = true;
+            dropZones.forEach(dropZone => {
+                // Check if each drop zone has the correct word
+                const child = dropZone.firstChild;
+                if (!child || correctPairs[dropZone.id] !== child.id) {
+                    allFilled = false;
                 }
             });
-        });
-    
-        function isCorrectDrop(dropId, wordId) {
-            const correctPairs = {
-                drop1: 'word3', // "בניין כוח"
-                drop2: 'word2', // "תכשיר"
-                drop3: 'word6', // "תאמן"
-                drop4: 'word5', // "סדיר"
-                drop5: 'word8', // "מילואים"
-                drop6: 'word1', // "חילוץ"
-                drop7: 'word7'  // "אב״כ"
-            };
-            return correctPairs[dropId] === wordId; // Return true if correct
+
+            // If all drop zones are correctly filled, display the "Next" button
+            if (allFilled) {
+                nextButton.style.display = 'block';
+            }
         }
+
+        function goToNextPage() {
+            // Update currPage
+            if (currPage === 33) {
+                currPage = 34;
+                // Update the sentence and correct pairs for page 34
+                document.getElementById('sentence').innerHTML = `
+                    מפקדת החטיבה תשמש כ<span class="drop-zone" id="drop1"></span> בחירום ובתוך כך תפעל באירועי חילוץ והצלה בכל זירות ה
+                    <span class="drop-zone" id="drop2"></span>, לרבות <span class="drop-zone" id="drop3"></span> גבולות מדינת ישראל ותפקד על מבצעים 
+                    <span class="drop-zone" id="drop4"></span> ברגיעה ובלחימה.
+                `;
+                correctPairs = correctPairsPage34;
+            }
+
+            // Reset drop zones
+            dropZones = document.querySelectorAll('.drop-zone');
+            dropZones.forEach(dropZone => {
+                dropZone.innerHTML = ''; // Clear any dropped words
+                dropZone.style.pointerEvents = 'auto'; // Re-enable drop zone
+                dropZone.addEventListener('dragover', allowDrop); // Allow drop over the zone
+                dropZone.addEventListener('drop', drop); // Handle the drop action
+            });
+
+            // Repopulate the word bank
+            const wordBank = document.getElementById('word-bank');
+            wordBank.innerHTML = ''; // Clear current word bank
+            wordBankContent.forEach(word => {
+                const wordElement = document.createElement('div');
+                wordElement.id = word.id;
+                wordElement.className = 'word';
+                wordElement.textContent = word.text;
+                wordElement.setAttribute('draggable', 'true');
+                wordElement.addEventListener('dragstart', drag);
+                wordBank.appendChild(wordElement);
+            });
+
+            // Hide the Next button
+            nextButton.style.display = 'none';
+        }
+
+        // Populate the word bank for the first time
+        const wordBank = document.getElementById('word-bank');
+        wordBankContent.forEach(word => {
+            const wordElement = document.createElement('div');
+            wordElement.id = word.id;
+            wordElement.className = 'word';
+            wordElement.textContent = word.text;
+            wordElement.setAttribute('draggable', 'true');
+            wordElement.addEventListener('dragstart', drag);
+            wordBank.appendChild(wordElement);
+        });
+
+        // Make the drop zones droppable
+        dropZones.forEach(dropZone => {
+            dropZone.addEventListener('dragover', allowDrop); // Allow drop over the zone
+            dropZone.addEventListener('drop', drop); // Handle the drop action
+        });
+
+        // Add event listener to Next button
+        nextButton.addEventListener('click', goToNextPage);
     </script>
-    
 </body>
 </html>

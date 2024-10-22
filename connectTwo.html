@@ -106,10 +106,19 @@
             display: none;
             text-align: center;
         }
+
+        /* Style for larger cards in the second question */
+        .large-card {
+            width: 20rem; /* Larger width for the second question */
+            height: auto; /* Allow height to adjust to content */
+            font-size: 0.9rem; /* Adjust font size for longer content */
+            text-align: left; /* Align text to the left */
+            padding: 1rem; /* Add padding for readability */
+        }
     </style>
 </head>
 <body>
-    <div id="question">התאם בין התאריך לאירוע. לחץ על 2 תשובות משורות שונות ולחץ על כפתור "חבר" כדי לבדוק את תשובתך</div>
+    <div id="question">התאם בין התאריך לאירוע. לחץ על 2 תשובות משורות שונות ולחץ על הכפתור כדי לבדוק את תשובתך</div>
 
     <!-- Card Container -->
     <div class="card-container">
@@ -132,7 +141,7 @@
             <div id="event2" class="card">הקמת פלוגת החילוץ הראשונה- פלוגת 'שביט'</div>
             <div id="event8" class="card">הקמת הנפה הסדירה</div>
             <div id="event3" class="card">הקמת פלוגת 'חץ' ופלוגת 'רותם'</div>
-            <div id="event9" class="card">איחוד בה"ד 16 והנפה הסדירה והקמת חטיבת החילוץ</div>
+            <div id="event9" class="card">איחוד בה''ד 16 והנפה הסדירה והקמת חטיבת החילוץ</div>
             <div id="event5" class="card">הקמת גדוד קדם</div>
             <div id="event1" class="card">הקמת פיקוד העורף</div>
             <div id="event7" class="card">הקמת גדוד רם</div>
@@ -141,15 +150,23 @@
     </div>
 
     <!-- Connect Button -->
-    <button id="check-btn">חבר</button>
+    <button id="check-btn">בדיקה</button>
 
     <!-- Error Message -->
     <div class="error" id="error-msg">עליכם לבחור 2 תשובות בלבד</div>
 
     <script>
         let selectedCards = [];
-
-        const correctPairs = {
+        let questionNumber = 1; // Track the current question
+        let isNextQuestionReady = false; // Track if the button should load the next question
+    
+        // List of available colors (will be applied in order)
+        const availableColors = ['#cb9ee1', '#f3d2db', '#a1d4df', '#f9f6c1', '#eecfbc', '#bccfd3', '#e6d5c3', '#c2dbbe', '#d3e6ed'];
+        
+        let colorIndex = 0; // Start at the first color
+    
+        // First question's pairs
+        const correctPairsQuestion1 = {
             'year1': 'event1',
             'year2': 'event2',
             'year3': 'event3',
@@ -160,104 +177,170 @@
             'year8': 'event8',
             'year9': 'event9'
         };
-
+    
+        // Second question's pairs
+        const correctPairsQuestion2 = {
+            'unit1': 'unit-exp5',
+            'unit2': 'unit-exp2',
+            'unit3': 'unit-exp4',
+            'unit4': 'unit-exp1',
+            'unit5': 'unit-exp3'
+        };
+    
+        let correctPairs = correctPairsQuestion1; // Start with the first question's pairs
         let allCorrectPairsMatched = 0;
-
+    
+        // Function to get the next color in sequence from availableColors
+        function getNextColor() {
+            const color = availableColors[colorIndex];
+            colorIndex++; // Move to the next color for the next correct pair
+            return color;
+        }
+    
         // Handle card selection and deselection
         function handleSelectedAnswerCards(card, container) {
             const selectedCard = container.querySelector('.selected');
-
-            // Deselect the currently selected card if clicked again
             if (card.classList.contains('selected')) {
                 card.classList.remove('selected');
                 selectedCards = selectedCards.filter(c => c !== card);
             } else {
-                // If there is another selected card in the same container, deselect it
                 if (selectedCard) {
                     selectedCard.classList.remove('selected');
                     selectedCards = selectedCards.filter(c => c !== selectedCard);
                 }
-                // Select the clicked card
                 card.classList.add('selected');
                 selectedCards.push(card);
             }
         }
-
+    
         // Check the selected answer cards
         function checkAnswerCards() {
             const checkBtn = document.getElementById('check-btn');
             const errorMsg = document.getElementById('error-msg');
-
+    
             // Ensure exactly two cards are selected
             if (selectedCards.length !== 2) {
                 errorMsg.style.display = 'block';
                 setTimeout(() => errorMsg.style.display = 'none', 10000);
-                // Deselect the cards after showing the error
                 selectedCards.forEach(card => card.classList.remove('selected'));
                 selectedCards = [];
                 return;
             }
-
-            const [yearCard, eventCard] = selectedCards;
-            const yearId = yearCard.id;
-            const eventId = eventCard.id;
-            const isCorrectPair = Array.isArray(correctPairs[yearId])
-                ? correctPairs[yearId].includes(eventId)
-                : correctPairs[yearId] === eventId;
-
+    
+            const [firstCard, secondCard] = selectedCards;
+            const firstCardId = firstCard.id;
+            const secondCardId = secondCard.id;
+    
+            // Check if the selected pair is correct for the current question
+            const isCorrectPair = Array.isArray(correctPairs[firstCardId])
+                ? correctPairs[firstCardId].includes(secondCardId)
+                : correctPairs[firstCardId] === secondCardId;
+    
             if (isCorrectPair) {
-                // Mark correct pair and lock them
-                yearCard.classList.add('correct');
-                eventCard.classList.add('correct');
-                yearCard.classList.remove('selected');
-                eventCard.classList.remove('selected');
+                const nextColor = getNextColor();
+                firstCard.style.backgroundColor = `${nextColor}80`; // Opacity 0.5 (hex 80)
+                secondCard.style.backgroundColor = `${nextColor}80`; // Opacity 0.5 (hex 80)
+                firstCard.style.borderColor = nextColor;
+                secondCard.style.borderColor = nextColor;
+                firstCard.classList.add('correct');
+                secondCard.classList.add('correct');
+                firstCard.classList.remove('selected');
+                secondCard.classList.remove('selected');
                 selectedCards = [];
                 allCorrectPairsMatched++;
-
+    
                 // Check if all pairs are matched
-                if (allCorrectPairsMatched === 9) {
-                    checkBtn.textContent = 'הבא';
+                if ((questionNumber === 1 && allCorrectPairsMatched === 9) || (questionNumber === 2 && allCorrectPairsMatched === 5)) {
+                    checkBtn.textContent = 'הבא'; // Change the button text to "הבא"
+                    isNextQuestionReady = true; // Flag to show the next question on click
                 }
             } else {
-                // Animate wrong answer (blinking effect)
-                yearCard.classList.add('wrong');
-                eventCard.classList.add('wrong');
+                firstCard.classList.add('wrong');
+                secondCard.classList.add('wrong');
                 setTimeout(() => {
-                    yearCard.classList.remove('wrong');
-                    eventCard.classList.remove('wrong');
-                    yearCard.classList.remove('selected');
-                    eventCard.classList.remove('selected');
+                    firstCard.classList.remove('wrong');
+                    secondCard.classList.remove('wrong');
+                    firstCard.classList.remove('selected');
+                    secondCard.classList.remove('selected');
                     selectedCards = [];
                 }, 1500);
             }
         }
-
-        // Get the year and event containers
+    
+        // Load the second question
+        function loadNextQuestion() {
+            questionNumber = 2;
+            allCorrectPairsMatched = 0;
+            colorIndex = 0; // Reset color index for the second question
+            correctPairs = correctPairsQuestion2; // Switch to the second question's pairs
+            isNextQuestionReady = false; // Reset flag
+    
+            // Update the card containers with the new content for the second question
+            const yearContainer = document.querySelector('.year-container');
+            const eventContainer = document.querySelector('.event-container');
+    
+            // Replace upper container cards for the second question
+            yearContainer.innerHTML = `
+                <div id="unit1" class="card">בא''פ העורף</div>
+                <div id="unit2" class="card">בית הספר לפיקוד ומקצועות העורף</div>
+                <div id="unit3" class="card">מפקדת החטיבה</div>
+                <div id="unit4" class="card">יחידת מתכים</div>
+                <div id="unit5" class="card">בא''ח העורף</div>
+            `;
+    
+            // Replace lower container cards for the second question and make them larger
+            eventContainer.innerHTML = `
+                <div id="unit-exp1" class="card large-card">הגנה קרקעית על מתקן ''מתכים" ע''י יחידותיו וכוחות ת''פ</div>
+                <div id="unit-exp2" class="card large-card">מתמחה בהכשרת מפקדים ומדריכים בחילוץ, לחימה, אב"כ , עורף, ובשמירת כשירות הפרט בתחומי ליבת העורף</div>
+                <div id="unit-exp3" class="card large-card">מכשיר לוחמים ומפתח את המפקדים למקצועות החילוץ, אב"כ ולוחמה</div>
+                <div id="unit-exp4" class="card large-card">תשמש כמפקדה משימתית בחירום ובתוך כך תפעל באירועי חילוץ והצלה בכל זירות המלחמה , לרבות מחוץ לגבולות המדינה ותפקד על מבצעים במרחב האזרחי ברגיעה ובלחימה</div>
+                <div id="unit-exp5" class="card large-card">מתמחה בהובלה וחניכה של אימוני גדודי מילואים בתחומי חילוץ, אב"כ וחי"ר קל, חניכת גדודי החטיבה באימונים בין קווים ותו"כ תע"מ, והובלת קורסים והכשרות בתחומי: חילוץ, רפואה, שו"ב , אנו"ח, הנדסה , צמ"ה, אוכלוסייה</div>
+            `;
+    
+            // Add event listeners for the new cards
+            yearContainer.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', () => {
+                    handleSelectedAnswerCards(card, yearContainer);
+                });
+            });
+    
+            eventContainer.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', () => {
+                    handleSelectedAnswerCards(card, eventContainer);
+                });
+            });
+    
+            // Reset the button text to "חבר"
+            const checkBtn = document.getElementById('check-btn');
+            checkBtn.textContent = 'בדוק';
+        }
+    
+        // Get the initial containers and add event listeners for the first question
         const yearContainer = document.querySelector('.year-container');
         const eventContainer = document.querySelector('.event-container');
-
-        // Add event listeners for year cards
+    
         yearContainer.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', () => {
                 handleSelectedAnswerCards(card, yearContainer);
             });
         });
-
-        // Add event listeners for event cards
+    
         eventContainer.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', () => {
                 handleSelectedAnswerCards(card, eventContainer);
             });
         });
-
+    
         // Add event listener for the check button
         document.getElementById('check-btn').addEventListener('click', () => {
-            if (allCorrectPairsMatched === 9) {
-                alert('finished question');
+            if (isNextQuestionReady) {
+                // If the next question is ready, load the next question on click
+                loadNextQuestion();
             } else {
                 checkAnswerCards();
             }
         });
     </script>
+    
 </body>
 </html>
