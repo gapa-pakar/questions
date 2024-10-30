@@ -32,19 +32,19 @@
         width: 100vw;
     }
 
-    #question-container {
+    #american-question-container {
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
     }
 
-    .question-title {
+    .american-question-title {
         font-weight: 600;
         padding-right: 1rem;
     }
 
-    .answer {
+    .american-answer {
         text-align: center;
         width: 20rem;
         position: relative;
@@ -55,7 +55,7 @@
         background-color: rgb(255, 255, 255, 0.5);
     }
 
-    .answer:hover {
+    .american-answer:hover {
         cursor: pointer;
     }
 
@@ -74,7 +74,7 @@
         background-color: rgb(252, 90, 90, 0.5);
     }
 
-    #check-btn {
+    #american-check-btn {
         border: 2px solid white;
         border-radius: 3rem;
         background-color: rgb(255, 255, 255, 0.5);
@@ -88,7 +88,7 @@
 </head>
 <body>
   <div id="page">
-    <div id="question-container">
+    <div id="american-question-container">
         <!-- <div class="question-title">מתי הוקם פיקוד העורף?</div>
         <div id="ans-container">
             <div id="ans1" class="answer">1992</div>
@@ -96,14 +96,14 @@
             <div id="ans3" class="answer">2016</div>
             <div id="ans4" class="answer">1982</div>
         </div> -->
-        <div class="question-title">בעקבות איזה אירוע הוחלט על הקמת פיקוד העורף?</div>
-        <div id="ans-container">
-            <div id="ans1" class="answer">מלחמת ששת הימים</div>
-            <div id="ans2" class="answer">מלחמת שלום הגליל</div>
-            <div id="ans3" class="answer">מלחמת המפרץ</div>
-            <div id="ans4" class="answer">פעולות התגמול</div>
+        <div class="american-question-title">בעקבות איזה אירוע הוחלט על הקמת פיקוד העורף?</div>
+        <div id="american-ans-container">
+            <div id="american-ans1" class="american-answer">מלחמת ששת הימים</div>
+            <div id="american-ans2" class="american-answer">מלחמת שלום הגליל</div>
+            <div id="american-ans3" class="american-answer">מלחמת המפרץ</div>
+            <div id="american-ans4" class="american-answer">פעולות התגמול</div>
         </div>
-        <button id="check-btn">בדיקה</button>
+        <button id="american-check-btn">בדיקה</button>
     </div>
   </div>
   
@@ -111,11 +111,10 @@
 <script>
   // Handle selecting and deselecting answers
   let currPage = 41;
-  let american1Finished = false;
 
   
   function handleSelectedAnswer() {
-    const answers = document.querySelectorAll('.answer');
+    const answers = document.querySelectorAll('.american-answer');
       let selectedAnswer = null;
       
       answers.forEach(answer => {
@@ -141,7 +140,7 @@
       
       // Deselect any selected answer if a non-answer element is clicked
       document.addEventListener('click', (event) => {
-        if (!event.target.classList.contains('answer')) {
+        if (!event.target.classList.contains('american-answer')) {
           if (selectedAnswer) {
             selectedAnswer.classList.remove('selected');
             selectedAnswer = null;
@@ -153,11 +152,11 @@
     // Check if the selected answer is correct
     function checkMultipulChoice() {
       const selectedAnswer = document.querySelector('.selected');
-      const correctAmerican1 = document.getElementById('ans1');
-      const correctAmerican2 = document.getElementById('ans3');
-      const correctAmerican3 = document.getElementById('ans2');
-      const correctAmerican4 = document.getElementById('ans4');
-      const checkButton = document.getElementById('check-btn');
+      const correctAmerican1 = document.getElementById('american-ans1');
+      const correctAmerican2 = document.getElementById('american-ans3');
+      const correctAmerican3 = document.getElementById('american-ans2');
+      const correctAmerican4 = document.getElementById('american-ans4');
+      const checkButton = document.getElementById('american-check-btn');
       
       // If no answer is selected, return
       if (!selectedAnswer) return;
@@ -183,7 +182,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       handleSelectedAnswer();
 
-      const checkButton = document.getElementById('check-btn');
+      const checkButton = document.getElementById('american-check-btn');
       checkButton.addEventListener('click', checkMultipulChoice);
     });
   </script>

@@ -10,46 +10,72 @@
             src: url("assets/fonts/Assistant/Assistant-Regular.ttf");
         }
 
-        /* General body styling */
+        /* Provided CSS for html, body, and #page */
+        html, body { 
+            font-family: "Assistant";
+            font-size: calc(1vh + 1vw + 8px);
+            direction: rtl;
+            overflow: hidden;
+            text-align: right;
+        }
+
         body {
-            font-family: "Assistant", sans-serif;
+            background-image: url("assets/images/background.svg");
+            background-size: 100vw 104vh;
+            background-repeat: no-repeat;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #page {
+            height: calc(100vh);
+            position: absolute;
+            top: 0rem;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-size: calc(1vh + 1vw + 8px);
         }
 
-        /* Question text styling */
-        #question {
-            margin-bottom: 2rem;
-            font-size: 1.5rem;
+        /* Centered content for .connect-question-container */
+        .connect-question-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 95%;
+            max-width: 1600px;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        /* Smaller Question Text */
+        #connect-question {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
             text-align: center;
         }
 
         /* Container for the cards */
-        .card-container {
+        .connect-card-container {
             display: flex;
-            flex-direction: column; /* Organize in two horizontal rows */
+            flex-direction: column;
             align-items: center;
-            width: 80%;
+            width: 95%;
         }
 
         /* Year and Event container styling */
-        .year-container, .event-container {
+        .connect-year-container, .connect-event-container {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         /* Card default styling */
-        .card {
-            width: 10rem;
-            height: 5rem;
+        .connect-card {
+            width: 5rem;
+            height: 2.5rem;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -58,9 +84,9 @@
             border-radius: 0.5rem;
             cursor: pointer;
             text-align: center;
-            font-size: 1rem;
-            padding: 0.5rem;
-            margin: 0.5rem; /* Space between cards */
+            font-size: 0.55rem;
+            padding: 0.4rem;
+            margin: 0.4rem;
         }
 
         /* Selected card */
@@ -81,265 +107,295 @@
             50% { background-color: rgba(255, 255, 255, 0.5); border-color: white; }
         }
 
-        .wrong {
+        .wrong-anim {
             animation: blink 0.75s ease-in-out 3;
         }
 
         /* Check button styling */
-        #check-btn {
+        #connect-check-btn {
             font-family: "Assistant", sans-serif;
             font-weight: 600;
             border: 2px solid white;
             border-radius: 3rem;
             background-color: rgba(255, 255, 255, 0.5);
-            font-size: 0.8rem;
-            padding: 0.5rem 1.5rem;
+            font-size: 0.7rem;
+            padding: 0.3rem 1rem;
             margin-top: 1rem;
             cursor: pointer;
         }
 
         /* Error message styling */
-        .error {
+        .connect-error {
             color: red;
-            font-size: 1rem;
+            font-size: 0.8rem;
             margin-top: 1rem;
             display: none;
             text-align: center;
         }
 
-        /* Style for larger cards in the second question */
-        .large-card {
-            width: 20rem; /* Larger width for the second question */
-            height: auto; /* Allow height to adjust to content */
-            font-size: 0.9rem; /* Adjust font size for longer content */
-            text-align: left; /* Align text to the left */
-            padding: 1rem; /* Add padding for readability */
+        /* Smaller cards for the second question */
+        .large-connect-card {
+            width: 10rem;
+            height: auto;
+            font-size: 0.55rem;
+            text-align: center;
+            padding: 0.8rem;
         }
     </style>
 </head>
 <body>
-    <div id="question">התאם בין התאריך לאירוע. לחץ על 2 תשובות משורות שונות ולחץ על הכפתור כדי לבדוק את תשובתך</div>
+    <div id="page">
+        <div class="connect-question-container">
+            <div id="connect-question">התאם בין התאריך לאירוע. לחץ על 2 תשובות משורות שונות ולחץ על הכפתור כדי לבדוק את תשובתך</div>
 
-    <!-- Card Container -->
-    <div class="card-container">
-        <!-- Year Cards (First Row) -->
-        <div class="year-container">
-            <div id="year1" class="card">1992</div>
-            <div id="year2" class="card">2003</div>
-            <div id="year3" class="card">2004</div>
-            <div id="year4" class="card">2008</div>
-            <div id="year5" class="card">2009</div>
-            <div id="year6" class="card">2012</div>
-            <div id="year7" class="card">2012</div>
-            <div id="year8" class="card">2013</div>
-            <div id="year9" class="card">2016</div>
-        </div>
+            <!-- Card Container -->
+            <div class="connect-card-container">
+                <!-- Year Cards (First Row) -->
+                <div class="connect-year-container">
+                    <div id="connect-year1" class="connect-card">1992</div>
+                    <div id="connect-year2" class="connect-card">2003</div>
+                    <div id="connect-year3" class="connect-card">2004</div>
+                    <div id="connect-year4" class="connect-card">2008</div>
+                    <div id="connect-year5" class="connect-card">2009</div>
+                    <div id="connect-year6" class="connect-card">2012</div>
+                    <div id="connect-year7" class="connect-card">2012</div>
+                    <div id="connect-year8" class="connect-card">2013</div>
+                    <div id="connect-year9" class="connect-card">2016</div>
+                </div>
 
-        <!-- Shuffled Event Cards (Second Row) -->
-        <div class="event-container">
-            <div id="event6" class="card">הקמת גדוד תבור</div>
-            <div id="event2" class="card">הקמת פלוגת החילוץ הראשונה- פלוגת 'שביט'</div>
-            <div id="event8" class="card">הקמת הנפה הסדירה</div>
-            <div id="event3" class="card">הקמת פלוגת 'חץ' ופלוגת 'רותם'</div>
-            <div id="event9" class="card">איחוד בה''ד 16 והנפה הסדירה והקמת חטיבת החילוץ</div>
-            <div id="event5" class="card">הקמת גדוד קדם</div>
-            <div id="event1" class="card">הקמת פיקוד העורף</div>
-            <div id="event7" class="card">הקמת גדוד רם</div>
-            <div id="event4" class="card">איחוד פלוגות החילוץ והקמת גדוד שחר</div>
+                <!-- Shuffled Event Cards (Second Row) -->
+                <div class="connect-event-container">
+                    <div id="connect-event6" class="connect-card">הקמת גדוד תבור</div>
+                    <div id="connect-event2" class="connect-card">הקמת פלוגת החילוץ הראשונה- פלוגת 'שביט'</div>
+                    <div id="connect-event8" class="connect-card">הקמת הנפה הסדירה</div>
+                    <div id="connect-event3" class="connect-card">הקמת פלוגת 'חץ' ופלוגת 'רותם'</div>
+                    <div id="connect-event9" class="connect-card">איחוד בה''ד 16 והנפה הסדירה והקמת חטיבת החילוץ</div>
+                    <div id="connect-event5" class="connect-card">הקמת גדוד קדם</div>
+                    <div id="connect-event1" class="connect-card">הקמת פיקוד העורף</div>
+                    <div id="connect-event7" class="connect-card">הקמת גדוד רם</div>
+                    <div id="connect-event4" class="connect-card">איחוד פלוגות החילוץ והקמת גדוד שחר</div>
+                </div>
+            </div>
+
+            <!-- Connect Button -->
+            <button id="connect-check-btn">בדיקה</button>
+
+            <!-- Error Message -->
+            <div class="connect-error" id="connect-error-msg">עליכם לבחור 2 תשובות בלבד</div>
         </div>
     </div>
-
-    <!-- Connect Button -->
-    <button id="check-btn">בדיקה</button>
-
-    <!-- Error Message -->
-    <div class="error" id="error-msg">עליכם לבחור 2 תשובות בלבד</div>
-
     <script>
-        let selectedCards = [];
-        let questionNumber = 1; // Track the current question
-        let isNextQuestionReady = false; // Track if the button should load the next question
-    
+        let connectTwoSelectedCards = [];
+        let connectTwoQuestionNumber = 1; // Track the current question
+        let connectTwoIsNextQuestionReady = false; // Track if the button should load the next question
+
         // List of available colors (will be applied in order)
-        const availableColors = ['#cb9ee1', '#f3d2db', '#a1d4df', '#f9f6c1', '#eecfbc', '#bccfd3', '#e6d5c3', '#c2dbbe', '#d3e6ed'];
-        
-        let colorIndex = 0; // Start at the first color
-    
+        const connectTwoAvailableColors = ['#cb9ee1', '#f3d2db', '#a1d4df', '#f9f6c1', '#eecfbc', '#bccfd3', '#e6d5c3', '#c2dbbe', '#d3e6ed'];
+        let connectTwoColorIndex = 0; // Start at the first color
+
         // First question's pairs
-        const correctPairsQuestion1 = {
-            'year1': 'event1',
-            'year2': 'event2',
-            'year3': 'event3',
-            'year4': 'event4',
-            'year5': 'event5',
-            'year6': ['event6', 'event7'],
-            'year7': ['event6', 'event7'],
-            'year8': 'event8',
-            'year9': 'event9'
+        const connectTwoCorrectPairsQuestion1 = {
+            'connect-year1': 'connect-event1',
+            'connect-year2': 'connect-event2',
+            'connect-year3': 'connect-event3',
+            'connect-year4': 'connect-event4',
+            'connect-year5': 'connect-event5',
+            'connect-year6': ['connect-event6', 'connect-event7'],
+            'connect-year7': ['connect-event6', 'connect-event7'],
+            'connect-year8': 'connect-event8',
+            'connect-year9': 'connect-event9'
         };
-    
+
         // Second question's pairs
-        const correctPairsQuestion2 = {
+        const connectTwoCorrectPairsQuestion2 = {
             'unit1': 'unit-exp5',
             'unit2': 'unit-exp2',
             'unit3': 'unit-exp4',
             'unit4': 'unit-exp1',
             'unit5': 'unit-exp3'
         };
-    
-        let correctPairs = correctPairsQuestion1; // Start with the first question's pairs
-        let allCorrectPairsMatched = 0;
-    
-        // Function to get the next color in sequence from availableColors
-        function getNextColor() {
-            const color = availableColors[colorIndex];
-            colorIndex++; // Move to the next color for the next correct pair
+
+        const connectTwoCorrectPairsQuestion3 = {
+            'unit1': 'unit-exp4',
+            'unit2': 'unit-exp2',
+            'unit3': 'unit-exp1',
+            'unit4': 'unit-exp3'
+        }
+
+        let connectTwoCorrectPairs = connectTwoCorrectPairsQuestion1; // Start with the first question's pairs
+        let connectTwoAllCorrectPairsMatched = 0;
+
+        // Function to get the next color in sequence from connectTwoAvailableColors
+        function connectTwoGetNextColor() {
+            const color = connectTwoAvailableColors[connectTwoColorIndex];
+            connectTwoColorIndex = (connectTwoColorIndex + 1) % connectTwoAvailableColors.length; // Cycle through colors
             return color;
         }
-    
+
         // Handle card selection and deselection
-        function handleSelectedAnswerCards(card, container) {
-            const selectedCard = container.querySelector('.selected');
+        function connectTwoHandleSelectedAnswerCards(card, container) {
+            const connectTwoSelectedCard = container.querySelector('.selected');
             if (card.classList.contains('selected')) {
                 card.classList.remove('selected');
-                selectedCards = selectedCards.filter(c => c !== card);
+                connectTwoSelectedCards = connectTwoSelectedCards.filter(c => c !== card);
             } else {
-                if (selectedCard) {
-                    selectedCard.classList.remove('selected');
-                    selectedCards = selectedCards.filter(c => c !== selectedCard);
+                if (connectTwoSelectedCard) {
+                    connectTwoSelectedCard.classList.remove('selected');
+                    connectTwoSelectedCards = connectTwoSelectedCards.filter(c => c !== connectTwoSelectedCard);
                 }
                 card.classList.add('selected');
-                selectedCards.push(card);
+                connectTwoSelectedCards.push(card);
             }
         }
-    
+
         // Check the selected answer cards
-        function checkAnswerCards() {
-            const checkBtn = document.getElementById('check-btn');
-            const errorMsg = document.getElementById('error-msg');
-    
+        function connectTwoCheckAnswerCards() {
+            const connectTwoCheckBtn = document.getElementById('connect-check-btn');
+            const connectTwoErrorMsg = document.getElementById('connect-error-msg');
+
             // Ensure exactly two cards are selected
-            if (selectedCards.length !== 2) {
-                errorMsg.style.display = 'block';
-                setTimeout(() => errorMsg.style.display = 'none', 10000);
-                selectedCards.forEach(card => card.classList.remove('selected'));
-                selectedCards = [];
+            if (connectTwoSelectedCards.length !== 2) {
+                connectTwoErrorMsg.style.display = 'block';
+                setTimeout(() => connectTwoErrorMsg.style.display = 'none', 10000);
+                connectTwoSelectedCards.forEach(card => card.classList.remove('selected'));
+                connectTwoSelectedCards = [];
                 return;
             }
-    
-            const [firstCard, secondCard] = selectedCards;
-            const firstCardId = firstCard.id;
-            const secondCardId = secondCard.id;
-    
-            // Check if the selected pair is correct for the current question
-            const isCorrectPair = Array.isArray(correctPairs[firstCardId])
-                ? correctPairs[firstCardId].includes(secondCardId)
-                : correctPairs[firstCardId] === secondCardId;
-    
-            if (isCorrectPair) {
-                const nextColor = getNextColor();
-                firstCard.style.backgroundColor = `${nextColor}80`; // Opacity 0.5 (hex 80)
-                secondCard.style.backgroundColor = `${nextColor}80`; // Opacity 0.5 (hex 80)
-                firstCard.style.borderColor = nextColor;
-                secondCard.style.borderColor = nextColor;
-                firstCard.classList.add('correct');
-                secondCard.classList.add('correct');
-                firstCard.classList.remove('selected');
-                secondCard.classList.remove('selected');
-                selectedCards = [];
-                allCorrectPairsMatched++;
-    
+
+            const [connectTwoFirstCard, connectTwoSecondCard] = connectTwoSelectedCards;
+            const connectTwoFirstCardId = connectTwoFirstCard.id;
+            const connectTwoSecondCardId = connectTwoSecondCard.id;
+
+            // Check if the selected pair is correct, accounting for either selection order
+            const connectTwoIsCorrectPair = (connectTwoCorrectPairs[connectTwoFirstCardId] === connectTwoSecondCardId || connectTwoCorrectPairs[connectTwoSecondCardId] === connectTwoFirstCardId) ||
+                (Array.isArray(connectTwoCorrectPairs[connectTwoFirstCardId]) && connectTwoCorrectPairs[connectTwoFirstCardId].includes(connectTwoSecondCardId)) ||
+                (Array.isArray(connectTwoCorrectPairs[connectTwoSecondCardId]) && connectTwoCorrectPairs[connectTwoSecondCardId].includes(connectTwoFirstCardId));
+
+            if (connectTwoIsCorrectPair) {
+                const connectTwoNextColor = connectTwoGetNextColor();
+                connectTwoFirstCard.style.backgroundColor = `${connectTwoNextColor}80`; // Opacity 0.5 (hex 80)
+                connectTwoSecondCard.style.backgroundColor = `${connectTwoNextColor}80`; // Opacity 0.5 (hex 80)
+                connectTwoFirstCard.style.borderColor = connectTwoNextColor;
+                connectTwoSecondCard.style.borderColor = connectTwoNextColor;
+                connectTwoFirstCard.classList.add('correct');
+                connectTwoSecondCard.classList.add('correct');
+                connectTwoFirstCard.classList.remove('selected');
+                connectTwoSecondCard.classList.remove('selected');
+                connectTwoSelectedCards = [];
+                connectTwoAllCorrectPairsMatched++;
+
                 // Check if all pairs are matched
-                if ((questionNumber === 1 && allCorrectPairsMatched === 9) || (questionNumber === 2 && allCorrectPairsMatched === 5)) {
-                    checkBtn.textContent = 'הבא'; // Change the button text to "הבא"
-                    isNextQuestionReady = true; // Flag to show the next question on click
+                if ((connectTwoQuestionNumber === 1 && connectTwoAllCorrectPairsMatched === 9) || (connectTwoQuestionNumber === 2 && connectTwoAllCorrectPairsMatched === 5) || (connectTwoQuestionNumber === 3 && connectTwoAllCorrectPairsMatched === 4)) {
+                    connectTwoCheckBtn.textContent = 'הבא'; // Change the button text to "הבא"
+                    connectTwoIsNextQuestionReady = true; // Flag to show the next question on click
                 }
             } else {
-                firstCard.classList.add('wrong');
-                secondCard.classList.add('wrong');
+                connectTwoFirstCard.classList.add('wrong-anim');
+                connectTwoSecondCard.classList.add('wrong-anim');
                 setTimeout(() => {
-                    firstCard.classList.remove('wrong');
-                    secondCard.classList.remove('wrong');
-                    firstCard.classList.remove('selected');
-                    secondCard.classList.remove('selected');
-                    selectedCards = [];
+                    connectTwoFirstCard.classList.remove('wrong-anim');
+                    connectTwoSecondCard.classList.remove('wrong-anim');
+                    connectTwoFirstCard.classList.remove('selected');
+                    connectTwoSecondCard.classList.remove('selected');
+                    connectTwoSelectedCards = [];
                 }, 1500);
             }
         }
-    
+
         // Load the second question
         function loadNextQuestion() {
-            questionNumber = 2;
-            allCorrectPairsMatched = 0;
-            colorIndex = 0; // Reset color index for the second question
-            correctPairs = correctPairsQuestion2; // Switch to the second question's pairs
-            isNextQuestionReady = false; // Reset flag
-    
+            connectTwoQuestionNumber++;
+            connectTwoAllCorrectPairsMatched = 0;
+            connectTwoColorIndex = 0; // Reset color index for the second question
+            console.log(connectTwoCorrectPairs);
+            connectTwoIsNextQuestionReady = false; // Reset flag
             // Update the card containers with the new content for the second question
-            const yearContainer = document.querySelector('.year-container');
-            const eventContainer = document.querySelector('.event-container');
+            const connectTwoYearContainer = document.querySelector('.connect-year-container');
+            const connectTwoEventContainer = document.querySelector('.connect-event-container');
+            
+            if (connectTwoQuestionNumber === 2) {
+                connectTwoCorrectPairs = connectTwoCorrectPairsQuestion2; // Switch to the second question's pairs
+                
+                // Replace upper container cards for the second question
+                connectTwoYearContainer.innerHTML = `
+                    <div id="unit1" class="connect-card">בא''פ העורף</div>
+                    <div id="unit2" class="connect-card">בית הספר לפיקוד ומקצועות העורף</div>
+                    <div id="unit3" class="connect-card">מפקדת החטיבה</div>
+                    <div id="unit4" class="connect-card">יחידת מתכים</div>
+                    <div id="unit5" class="connect-card">בא''ח העורף</div>
+                `;
     
-            // Replace upper container cards for the second question
-            yearContainer.innerHTML = `
-                <div id="unit1" class="card">בא''פ העורף</div>
-                <div id="unit2" class="card">בית הספר לפיקוד ומקצועות העורף</div>
-                <div id="unit3" class="card">מפקדת החטיבה</div>
-                <div id="unit4" class="card">יחידת מתכים</div>
-                <div id="unit5" class="card">בא''ח העורף</div>
-            `;
+                // Replace lower container cards for the second question and make them larger
+                connectTwoEventContainer.innerHTML = `
+                    <div id="unit-exp1" class="connect-card large-connect-card">הגנה קרקעית על מתקן ''מתכים" ע''י יחידותיו וכוחות ת''פ</div>
+                    <div id="unit-exp2" class="connect-card large-connect-card">מתמחה בהכשרת מפקדים ומדריכים בחילוץ, לחימה, אב''כ , עורף, ובשמירת כשירות הפרט בתחומי ליבת העורף</div>
+                    <div id="unit-exp3" class="connect-card large-connect-card">מכשיר לוחמים ומפתח את המפקדים למקצועות החילוץ, אב''כ ולוחמה</div>
+                    <div id="unit-exp4" class="connect-card large-connect-card">תשמש כמפקדה משימתית בחירום ובתוך כך תפעל באירועי חילוץ והצלה בכל זירות המלחמה , לרבות מחוץ לגבולות המדינה ותפקד על מבצעים במרחב האזרחי ברגיעה ובלחימה</div>
+                    <div id="unit-exp5" class="connect-card large-connect-card">מתמחה בהובלה וחניכה של אימוני גדודי מילואים בתחומי חילוץ, אב''כ וחי''ר קל, חניכת גדודי החטיבה באימונים בין קווים ותו''כ תע''מ, והובלת קורסים והכשרות בתחומי: חילוץ, רפואה, שו''ב , אנו''ח, הנדסה , צמ''ה, אוכלוסייה</div>
+                `;
+            } else {
+                connectTwoCorrectPairs = connectTwoCorrectPairsQuestion3; // Switch to the second question's pairs
+                // Replace upper container cards for the second question
+                connectTwoYearContainer.innerHTML = `
+                    <div id="unit1" class="connect-card">מדור אב''כ</div>
+                    <div id="unit2" class="connect-card">אימון מתקדם</div>
+                    <div id="unit3" class="connect-card">חניכת אוכלוסייה</div>
+                    <div id="unit4" class="connect-card">גדוד תבור</div>
+                `;
     
-            // Replace lower container cards for the second question and make them larger
-            eventContainer.innerHTML = `
-                <div id="unit-exp1" class="card large-card">הגנה קרקעית על מתקן ''מתכים" ע''י יחידותיו וכוחות ת''פ</div>
-                <div id="unit-exp2" class="card large-card">מתמחה בהכשרת מפקדים ומדריכים בחילוץ, לחימה, אב"כ , עורף, ובשמירת כשירות הפרט בתחומי ליבת העורף</div>
-                <div id="unit-exp3" class="card large-card">מכשיר לוחמים ומפתח את המפקדים למקצועות החילוץ, אב"כ ולוחמה</div>
-                <div id="unit-exp4" class="card large-card">תשמש כמפקדה משימתית בחירום ובתוך כך תפעל באירועי חילוץ והצלה בכל זירות המלחמה , לרבות מחוץ לגבולות המדינה ותפקד על מבצעים במרחב האזרחי ברגיעה ובלחימה</div>
-                <div id="unit-exp5" class="card large-card">מתמחה בהובלה וחניכה של אימוני גדודי מילואים בתחומי חילוץ, אב"כ וחי"ר קל, חניכת גדודי החטיבה באימונים בין קווים ותו"כ תע"מ, והובלת קורסים והכשרות בתחומי: חילוץ, רפואה, שו"ב , אנו"ח, הנדסה , צמ"ה, אוכלוסייה</div>
-            `;
-    
+                // Replace lower container cards for the second question and make them larger
+                connectTwoEventContainer.innerHTML = `
+                    <div id="unit-exp1" class="connect-card connect-card">בא''פ העורף</div>
+                    <div id="unit-exp2" class="connect-card connect-card">בא''ח העורף</div>
+                    <div id="unit-exp3" class="connect-card connect-card">מפקדת החטיבה</div>
+                    <div id="unit-exp4" class="connect-card connect-card">בית הספר לפיקוד ולמקצועות העורף</div>
+                `;
+            }
+            
+
             // Add event listeners for the new cards
-            yearContainer.querySelectorAll('.card').forEach(card => {
+            connectTwoYearContainer.querySelectorAll('.connect-card').forEach(card => {
                 card.addEventListener('click', () => {
-                    handleSelectedAnswerCards(card, yearContainer);
+                    connectTwoHandleSelectedAnswerCards(card, connectTwoYearContainer);
                 });
             });
-    
-            eventContainer.querySelectorAll('.card').forEach(card => {
+
+            connectTwoEventContainer.querySelectorAll('.connect-card').forEach(card => {
                 card.addEventListener('click', () => {
-                    handleSelectedAnswerCards(card, eventContainer);
+                    connectTwoHandleSelectedAnswerCards(card, connectTwoEventContainer);
                 });
             });
-    
-            // Reset the button text to "חבר"
-            const checkBtn = document.getElementById('check-btn');
-            checkBtn.textContent = 'בדוק';
+
+            // Reset the button text to "בדיקה"
+            const connectTwoCheckBtn = document.getElementById('connect-check-btn');
+            connectTwoCheckBtn.textContent = 'בדיקה';
         }
-    
+
         // Get the initial containers and add event listeners for the first question
-        const yearContainer = document.querySelector('.year-container');
-        const eventContainer = document.querySelector('.event-container');
-    
-        yearContainer.querySelectorAll('.card').forEach(card => {
+        const connectTwoYearContainer = document.querySelector('.connect-year-container');
+        const connectTwoEventContainer = document.querySelector('.connect-event-container');
+
+        connectTwoYearContainer.querySelectorAll('.connect-card').forEach(card => {
             card.addEventListener('click', () => {
-                handleSelectedAnswerCards(card, yearContainer);
+                connectTwoHandleSelectedAnswerCards(card, connectTwoYearContainer);
             });
         });
-    
-        eventContainer.querySelectorAll('.card').forEach(card => {
+
+        connectTwoEventContainer.querySelectorAll('.connect-card').forEach(card => {
             card.addEventListener('click', () => {
-                handleSelectedAnswerCards(card, eventContainer);
+                connectTwoHandleSelectedAnswerCards(card, connectTwoEventContainer);
             });
         });
-    
+
         // Add event listener for the check button
-        document.getElementById('check-btn').addEventListener('click', () => {
-            if (isNextQuestionReady) {
-                // If the next question is ready, load the next question on click
+        document.getElementById('connect-check-btn').addEventListener('click', () => {
+            if (connectTwoIsNextQuestionReady) {
                 loadNextQuestion();
             } else {
-                checkAnswerCards();
+                connectTwoCheckAnswerCards();
             }
         });
+
     </script>
     
 </body>

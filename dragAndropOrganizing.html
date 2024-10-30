@@ -5,64 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arrange Tasks Question</title>
     <style>
-        @font-face {
+      @font-face {
             font-family: "Assistant";
             src: url("assets/fonts/Assistant/Assistant-Regular.ttf");
         }
 
-        /* General body styling */
+        /* Original styles for html, body, and #page */
+        html, body {
+            font-family: "Assistant";
+            font-size: calc(1vh + 1vw + 8px);
+            direction: rtl;
+            overflow: hidden;
+            text-align: right;
+        }
+
         body {
-            font-family: "Assistant", sans-serif;
+            background-image: url("assets/images/background.svg");
+            background-size: 100vw 104vh;
+            background-repeat: no-repeat;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #page {
+            height: calc(100vh);
+            position: absolute;
+            top: 0rem;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-size: calc(1.1vh + 1.1vw + 10px); /* Increased font size */
-            text-align: center;
         }
 
         /* Question text styling */
-        #question {
-            margin-bottom: 2rem;
-            font-size: 1.5rem;
+        #page #organizing-question {
+            margin-bottom: 1rem; /* Reduced margin for better centering */
+            font-size: 1rem; /* Original size */
+            text-align: center;
+            width: 100%; /* Full width for centering */
         }
 
         /* Drop zone container styling */
-        .drop-zone-container {
+        .organizing-drop-zone-container {
             display: flex;
             justify-content: space-around; /* Space out the drop zones */
-            width: 90%; /* Set width for the container */
+            width: 100%; /* Set width for the container */
             margin: 1rem 0; /* Added margin for spacing */
         }
 
         /* Drop zone styling */
-        .drop-zone {
+        .organizing-drop-zone {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start; /* Align items to the top */
-            width: 40%; /* Width of drop zones */
-            height: auto; /* Set height to auto to allow it to grow */
-            min-height: 10rem; /* Minimum height */
+            width: 35%; /* Adjusted width of drop zones */
+            min-height: 4rem; /* Minimum height */
             border: 2px solid #ccc; /* Solid border */
             border-radius: 0.5rem;
             background-color: rgba(255, 255, 255, 0.9); /* Set background to white */
-            margin: 0 1rem; /* Spacing between drop zones */
-            padding: 1rem; /* Added padding */
+            padding: 1rem 0.5rem; /* Added padding */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
         }
 
-        /* Drop zone title styling */
-        .drop-zone-title {
-            margin-bottom: 0.5rem; /* Space between title and drop zone */
-            font-weight: bold; /* Make the title bold */
-        }
-
         /* Word bank container styling */
-        .word-bank {
+        .organizing-word-bank {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -70,133 +77,149 @@
             margin-bottom: 1rem;
             border: 2px solid #ccc; /* Added border to word bank */
             border-radius: 0.5rem; /* Rounded corners */
-            padding: 1rem; /* Added padding */
+            padding: 0.5rem; /* Added padding */
             background-color: rgba(255, 255, 255, 0.7); /* Slight background color */
-            max-width: 80%; /* Set max width for word bank */
+            max-width: 70%; /* Set max width for word bank */
             min-width: 40%; /* Minimum width to maintain size */
-            min-height: 5rem; /* Minimum height to maintain size */
+            min-height: 2rem; /* Minimum height to maintain size */
+            align-items: center; /* Center items in the word bank */
+            margin-left: auto; /* Centering */
+            margin-right: auto; /* Centering */
         }
 
         /* Word bank item styling */
-        .word {
+        .organizing-word {
             display: inline-block;
             background-color: rgba(255, 255, 255, 0.5);
             border: 2px solid white;
             border-radius: 0.5rem;
-            padding: 0.5rem 1rem;
-            margin: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            margin: 0.25rem;
             cursor: grab;
-            font-size: 1rem;
+            font-size: 0.6rem; /* Smaller font size */
             transition: background-color 0.3s ease;
-            width: calc(45% - 1rem); /* Width of each word, two items side by side */
+            width: calc(40% - 1rem); /* Width of each word, two items side by side */
+        }
+
+        .organizing-drop-zone .organizing-word {
+            width: calc(85% - 1rem);
         }
 
         /* Word hover effect */
-        .word:hover {
+        .organizing-word:hover {
             background-color: rgba(200, 200, 200, 0.5);
         }
 
         /* Next button styling */
-        #next-btn {
+        #organizing-next-btn {
             font-family: "Assistant", sans-serif;
             font-weight: 600;
             border: 2px solid white;
             border-radius: 3rem;
             background-color: rgba(255, 255, 255, 0.5);
             font-size: 0.8rem;
-            padding: 0.5rem 1.5rem;
+            padding: 0.25rem 1rem;
             cursor: pointer;
-            margin-top: 1rem;
+            margin: 1rem auto;
             display: none; /* Hide the button initially */
+            align-self: center; /* Center the button */
         }
+
     </style>
 </head>
 <body>
-    <!-- Question -->
-    <div id="question">סדרו את תפקידי החטיבה בהתאם לתפקידיה בשגרה ובחירום</div>
+    <div id="page">
+        <div class="organizing-question-container">
+            <!-- Question -->
+            <div id="organizing-question">סדרו את תפקידי החטיבה בהתאם לתפקידיה בשגרה ובחירום</div>
 
-    <!-- Drop zone containers -->
-    <div class="drop-zone-container">
-        <div class="drop-zone" id="routine-zone">
-            <div class="drop-zone-title">שגרה</div>
-        </div>
-        <div class="drop-zone" id="emergency-zone">
-            <div class="drop-zone-title">חירום</div>
+            <!-- Drop zone containers -->
+            <div class="organizing-drop-zone-container">
+                <div class="organizing-drop-zone" id="routine-zone">
+                    <div class="organizing-drop-zone-title">שגרה</div>
+                </div>
+                <div class="organizing-drop-zone" id="emergency-zone">
+                    <div class="organizing-drop-zone-title">חירום</div>
+                </div>
+            </div>
+
+            <!-- Word Bank -->
+            <div class="organizing-word-bank">
+                <div class="organizing-word" id="task1">לשמש בניין הכוח של גדודי החילוץ וההצלה הסדירים, בא''ח, ביה''ס לפיקוד ולמקצועות העורף ובסיס אימון יחידות פיקודי</div>
+                <div class="organizing-word" id="task2">לפתח ידע מקצועי בעולמות החילוץ והאב''כ</div>
+                <div class="organizing-word" id="task3">לאמן ולשמר כשירות למסגרות המילואים בפיקוד בהתאם למחזוריות האימונים</div>
+                <div class="organizing-word" id="task4">פו''ש על אירועי חילוץ, הצלה, בלתי קונבנציונליים ופינוי אוכלוסיה</div>
+                <div class="organizing-word" id="task5">לתגבר את מרכז המידע הפיקודי וביצוע משימות סיוע אזרחי</div>
+                <div class="organizing-word" id="task6">לבצע אימונים והכשרות במסגרת תכנית 'זמן יקר'</div>
+            </div>
+
+            <!-- Next button -->
+            <button id="organizing-next-btn">הבא</button>
         </div>
     </div>
-
-    <!-- Word Bank -->
-    <div class="word-bank">
-        <div class="word" id="task1">לשמש בניין הכוח של גדודי החילוץ וההצלה הסדירים, בא''ח, ביה''ס לפיקוד ולמקצועות העורף ובסיס אימון יחידות פיקודי</div>
-        <div class="word" id="task2">לפתח ידע מקצועי בעולמות החילוץ והאב''כ</div>
-        <div class="word" id="task3">לאמן ולשמר כשירות למסגרות המילואים בפיקוד בהתאם למחזוריות האימונים</div>
-        <div class="word" id="task4">פו"ש על אירועי חילוץ, הצלה, בלתי קונבנציונליים ופינוי אוכלוסיה</div>
-        <div class="word" id="task5">לתגבר את מרכז המידע הפיקודי וביצוע משימות סיוע אזרחי</div>
-        <div class="word" id="task6">לבצע אימונים והכשרות במסגרת תכנית 'זמן יקר'</div>
-    </div>
-
-    <!-- Next button -->
-    <button id="next-btn">הבא</button>
 
     <script>
-        const correctPairs = {
-    'routine-zone': ['task1', 'task2', 'task3'], // Correct tasks for routine
-    'emergency-zone': ['task4', 'task5', 'task6'] // Correct tasks for emergency
-};
+        const organizingCorrectPairs = {
+            'routine-zone': ['task1', 'task2', 'task3'], // Correct tasks for routine
+            'emergency-zone': ['task4', 'task5', 'task6'] // Correct tasks for emergency
+        };
 
-let dropZones = document.querySelectorAll('.drop-zone');
-let nextButton = document.getElementById('next-btn');
-let successfulDrops = []; // Array to keep track of successful drops
-let allFilled = false; // Global variable to track if all tasks are filled
+        let organizingDropZones = document.querySelectorAll('.organizing-drop-zone');
+        let organizingNextButton = document.getElementById('organizing-next-btn');
+        let organizingSuccessfulDrops = []; // Array to keep track of successful drops
+        let allFilled = false; // Global variable to track if all tasks are filled
 
-function allowDrop(event) {
-    event.preventDefault(); // Allow the drop action
-}
+        function organizingAllowDrop(event) {
+            event.preventDefault(); // Allow the drop action
+        }
 
-function drag(event) {
-    event.dataTransfer.setData('text', event.target.id); // Store the word ID being dragged
-}
+        function organizingDrag(event) {
+            event.dataTransfer.setData('text', event.target.id); // Store the word ID being dragged
+        }
 
-function drop(event) {
-    event.preventDefault();
-    const dropZoneId = event.target.id; // Get the drop zone ID
-    const wordId = event.dataTransfer.getData('text'); // Get the dragged word's ID
-    const droppedElement = document.getElementById(wordId); // Select the dragged word element
+        function organizingDrop(event) {
+            event.preventDefault();
+            const organizingDropZoneId = event.target.id; // Get the drop zone ID
+            const organizingWordId = event.dataTransfer.getData('text'); // Get the dragged word's ID
+            const organizingDroppedElement = document.getElementById(organizingWordId); // Select the dragged word element
 
-    // Check if the drop zone is correct
-    if (correctPairs[dropZoneId] && correctPairs[dropZoneId].includes(wordId)) {
-        // If correct pair, drop it
-        event.target.appendChild(droppedElement);
-        droppedElement.setAttribute('draggable', 'false'); // Disable further dragging
-        successfulDrops.push(wordId); // Track successful drop
-        checkCompletion(); // Check if all tasks are correctly placed
-    } else {
-        // If not correct, return the word to the word bank
-        const wordBank = document.querySelector('.word-bank');
-        wordBank.appendChild(droppedElement);
-    }
-}
+            // Check if the drop zone is correct
+            if (organizingCorrectPairs[organizingDropZoneId] && organizingCorrectPairs[organizingDropZoneId].includes(organizingWordId)) {
+                // If correct pair, drop it
+                event.target.appendChild(organizingDroppedElement);
+                organizingDroppedElement.setAttribute('draggable', 'false'); // Disable further dragging
+                organizingSuccessfulDrops.push(organizingWordId); // Track successful drop
+                checkCompletion(); // Check if all tasks are correctly placed
+            } else {
+                // If not correct, return the word to the word bank
+                const organizingWordBank = document.querySelector('.organizing-word-bank');
+                organizingWordBank.appendChild(organizingDroppedElement);
+            }
+        }
 
-function checkCompletion() {
-    // Check if all required tasks have been successfully placed
-    allFilled = successfulDrops.length === (correctPairs['routine-zone'].length + correctPairs['emergency-zone'].length);
+        function checkCompletion() {
+            // Check if all required tasks have been successfully placed
+            organizingAllFilled = organizingSuccessfulDrops.length === (organizingCorrectPairs['routine-zone'].length + organizingCorrectPairs['emergency-zone'].length);
 
-    // If all drop zones are correctly filled, display the "Next" button
-    if (allFilled) {
-        nextButton.style.display = 'block';
-    }
-}
+            // If all drop zones are correctly filled, display the "Next" button
+            if (organizingAllFilled) {
+                organizingNextButton.style.display = 'block';
+                organizingNextButton.addEventListener("click", () => {
+                    alert("finished");
+                })
+            }
+        }
 
-// Make the words draggable and the drop zones droppable
-document.querySelectorAll('.word').forEach(word => {
-    word.setAttribute('draggable', 'true'); // Set words as draggable
-    word.addEventListener('dragstart', drag); // Add drag event
-});
+        // Make the words draggable and the drop zones droppable
+        document.querySelectorAll('.organizing-word').forEach(organizingWord => {
+            organizingWord.setAttribute('draggable', 'true'); // Set organizingWords as draggable
+            organizingWord.addEventListener('dragstart', organizingDrag); // Add drag event
+        });
 
-dropZones.forEach(dropZone => {
-    dropZone.addEventListener('dragover', allowDrop); // Allow drop over the zone
-    dropZone.addEventListener('drop', drop); // Handle the drop action
-});
+        organizingDropZones.forEach(organizingDropZone => {
+            organizingDropZone.addEventListener('dragover', organizingAllowDrop); // Allow drop over the zone
+            organizingDropZone.addEventListener('drop', organizingDrop); // Handle the drop action
+        });
 
     </script>
 </body>

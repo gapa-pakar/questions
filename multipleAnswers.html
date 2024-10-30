@@ -32,23 +32,23 @@
       width: 100vw;
     }
 
-    #question-container {
+    #multiple-question-container {
       position: absolute;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
     }
 
-    .question-title {
+    .multiple-question-title {
       font-weight: 600;
       padding-right: 1rem;
     }
 
-    #ans-container {
+    #multiple-ans-container {
       margin: 1rem 0rem;
     }
 
-    .answer {
+    .multiple-answer {
       text-align: center;
       width: 1rem;
       height: 1rem;
@@ -76,7 +76,7 @@
       background-color: rgb(252, 90, 90, 0.5);
     }
 
-    #check-btn {
+    #multiple-check-btn {
       font-family: "Assistant";
       font-weight: 600;
       border: 2px solid white;
@@ -90,7 +90,7 @@
       cursor: pointer;
     }
 
-    .error {
+    .multiple-error {
       color: red;
       text-align: center;
       font-size: 0.8rem;
@@ -102,44 +102,51 @@
 </head>
 <body>
   <div id="page">
-    <div id="question-container">
-      <div class="question-title" id="question-title">מהם תפקידי החטיבה בשגרה? יכולה להיות יותר מתשובה אחת</div>
-      <div id="ans-container">
-        <div id="ans1" class="answer-cont">
-          <span class="answer"></span>
+    <div id="multiple-question-container">
+      <div class="multiple-question-title" id="multiple-question-title">מהם תפקידי החטיבה בשגרה? יכולה להיות יותר מתשובה אחת</div>
+      <div id="multiple-ans-container">
+        <div id="multiple-ans1" class="multiple-answer-cont">
+          <span class="multiple-answer"></span>
           <span>לשמש כח כוננות מיידי לאירועי חילוץ, הצלה ואב"כ.</span>
         </div>
-        <div id="ans2" class="answer-cont">
-          <span class="answer"></span>
+        <div id="multiple-ans2" class="multiple-answer-cont">
+          <span class="multiple-answer"></span>
           <span>להכשיר את מקצועות העורף בסדיר ובמילואים ואת מערך הלחימה בפקע"ר.</span>
         </div>
-        <div id="ans3" class="answer-cont">
-          <span class="answer"></span>
+        <div id="multiple-ans3" class="multiple-answer-cont">
+          <span class="multiple-answer"></span>
           <span>לדאוג לאבטחתו של בית הסוהר מגידו בשגרה ובחירום.</span>
         </div>
-        <div id="ans4" class="answer-cont">
-          <span class="answer"></span>
+        <div id="multiple-ans4" class="multiple-answer-cont">
+          <span class="multiple-answer"></span>
           <span>לשלח גדודים ולאמן מסגרות תוך כדי תעסוקה מבצעית.</span>
         </div>
-        <div id="ans5" class="answer-cont">
-          <span class="answer"></span>
+        <div id="multiple-ans5" class="multiple-answer-cont">
+          <span class="multiple-answer"></span>
           <span>חיזוק החוסן הלאומי והצלת חיים בשגרה.</span>
         </div>
       </div>
-      <button id="check-btn">בדיקה</button>
-      <div class="error">יש לבחור תשובה על מנת לבדוק את השאלה</div>
+      <button id="multiple-check-btn">בדיקה</button>
+      <div class="multiple-error">יש לבחור תשובה על מנת לבדוק את השאלה</div>
     </div>
   </div>
 
   <script>
     // Declare global variables for correct answers count
-    let correctSelectedCount = 0;
-    let totalCorrect = 3; // Number of correct answers for the first question
-    let isSecondQuestion = false; // Flag for the second question
+    // let currMultipleQuestion = 1;
+    // let multipleTotalCorrectQues1 = 3;
+    // let multipleTotalCorrectQues2 = 2;
+    let currPage = 32;
+    let multipleCorrectSelectedCount = 0;
+    let multipleTotalCorrect; // Number of correct answers for the first question
+    let multipleCorrectAnswers;
+    let multipleCorrectAnswers1 = ['multiple-ans1', 'multiple-ans2', 'multiple-ans4'];
+    let multipleCorrectAnswers2 = ['multiple-ans2', 'multiple-ans5'];
+    // let isSecondQuestion = false; // Flag for the second question
 
     // Handle answer selection
-    function handleSelection() {
-      const answers = document.querySelectorAll('.answer');
+    function multipleHandleSelection() {
+      const answers = document.querySelectorAll('.multiple-answer');
       answers.forEach(answer => {
         answer.addEventListener('click', () => {
           // Toggle "selected" class
@@ -150,38 +157,45 @@
           }
 
           // Hide error message if visible
-          const error = document.querySelector('.error');
-          if (error.style.display === 'block') {
-            error.style.display = 'none';
+          const multipleError = document.querySelector('.multiple-error');
+          if (multipleError.style.display === 'block') {
+            multipleError.style.display = 'none';
           }
         });
       });
     }
 
     // Check the selected answers
-    function checkAnswers() {
-      const correctAnswers = isSecondQuestion ? ['ans2', 'ans5'] : ['ans1', 'ans2', 'ans4'];
-      const selectedAnswers = document.querySelectorAll('.selected');
-      const checkButton = document.getElementById('check-btn');
-      const error = document.querySelector('.error');
+    function multipleCheckAnswers() {
+      if (currPage === 32) {
+        multipleTotalCorrect = multipleCorrectAnswers1.length;
+        multipleCorrectAnswers = multipleCorrectAnswers1;
+      } else {
+        multipleTotalCorrect = multipleCorrectAnswers2.length;
+        multipleCorrectAnswers = multipleCorrectAnswers2;
+      }
+      // const multipleCorrectAnswers = isSecondQuestion ? ['multiple-ans2', 'multiple-ans5'] : ['multiple-ans1', 'multiple-ans2', 'multiple-ans4'];
+      let multipleSelectedAnswers = document.querySelectorAll('.selected');
+      const multipleCheckButton = document.getElementById('multiple-check-btn');
+      const multipleError = document.querySelector('.multiple-error');
 
       // Show error if no answers are selected
-      if (selectedAnswers.length === 0) {
-        error.style.display = 'block';
+      if (multipleSelectedAnswers.length === 0) {
+        multipleError.style.display = 'block';
         return;
       }
 
       // Reset the count of correct answers selected in each check
-      correctSelectedCount = 0;
+      // multipleCorrectSelectedCount = 0;
 
       // Iterate over selected answers and check if they are correct
-      selectedAnswers.forEach(answer => {
+      multipleSelectedAnswers.forEach(answer => {
         const parentID = answer.parentElement.id;
-        if (correctAnswers.includes(parentID)) {
+        if (multipleCorrectAnswers.includes(parentID)) {
           // Correct answer
           answer.classList.remove('selected');
           answer.classList.add('correct');
-          correctSelectedCount++; // Increase the correct answer count
+          multipleCorrectSelectedCount++; // Increase the correct answer count
         } else {
           // Wrong answer
           answer.classList.remove('selected');
@@ -193,70 +207,71 @@
       });
 
       // Check if all correct answers were selected
-      if (correctSelectedCount >= totalCorrect) {
-        checkButton.textContent = 'הבא';
-        document.querySelectorAll('.answer').forEach(answer => {
+      if (multipleCorrectSelectedCount >= multipleTotalCorrect) {
+        multipleCheckButton.textContent = 'הבא';
+        document.querySelectorAll('.multiple-answer').forEach(answer => {
           answer.style.pointerEvents = 'none'; // Prevent further selection
         });
       } else {
-        checkButton.textContent = 'בדיקה נוספת';
+        multipleCheckButton.textContent = 'בדיקה נוספת';
       }
     }
 
     // Load new question
     function loadNewQuestion() {
-      const questionTitle = document.getElementById('question-title');
-      const ansContainer = document.getElementById('ans-container');
-      const checkButton = document.getElementById('check-btn');
+      const multipleQuestionTitle = document.getElementById('multiple-question-title');
+      const multipleAnsContainer = document.getElementById('multiple-ans-container');
+      const multipleCheckButton = document.getElementById('multiple-check-btn');
 
       // Clear previous selections
-      correctSelectedCount = 0;
-      document.querySelectorAll('.answer').forEach(answer => {
+      multipleCorrectSelectedCount = 0;
+      currPage = 39;
+      document.querySelectorAll('.multiple-answer').forEach(answer => {
         answer.classList.remove('correct', 'wrong', 'selected');
         answer.style.pointerEvents = 'auto';
       });
 
       // Set new question and answers
-      questionTitle.textContent = 'מהם תפקידי חטיבת החילוץ וההדרכה בשגרה? יכולה להיות יותר מתשובה אחת';
-      ansContainer.innerHTML = `
-        <div id="ans1" class="answer-cont">
-          <span class="answer"></span>
-          <span>לשמש כח כוננות מיידי לאירועי חילוץ, הצלה ואב"כ.</span>
+      multipleQuestionTitle.textContent = 'מהם תחומי הכשירות המרכזיים של לוחמי החטיבה? יכולה להיות יותר מתשובה אחת';
+      multipleAnsContainer.innerHTML = `
+        <div id="multiple-ans1" class="multiple-answer-cont">
+          <span class="multiple-answer"></span>
+          <span>לש''ב</span>
         </div>
-        <div id="ans2" class="answer-cont">
-          <span class="answer"></span>
-          <span>לדאוג לאבטחתו של בית הסוהר מגידו בשגרה ובחירום.</span>
+        <div id="multiple-ans2" class="multiple-answer-cont">
+          <span class="multiple-answer"></span>
+          <span>חילוץ</span>
         </div>
-        <div id="ans3" class="answer-cont">
-          <span class="answer"></span>
-          <span>לשלח גדודים ולאמן מסגרות תוך כדי תעסוקה מבצעית.</span>
+        <div id="multiple-ans3" class="multiple-answer-cont">
+          <span class="multiple-answer"></span>
+          <span>כושר גופני</span>
         </div>
-        <div id="ans4" class="answer-cont">
-          <span class="answer"></span>
-          <span>חיזוק החוסן הלאומי והצלת חיים בשגרה.</span>
+        <div id="multiple-ans4" class="multiple-answer-cont">
+          <span class="multiple-answer"></span>
+          <span>מנהיגות ופיקוד</span>
         </div>
-        <div id="ans5" class="answer-cont">
-          <span class="answer"></span>
-          <span>להכשיר את מקצועות העורף בסדיר ובמילואים ואת מערך הלחימה בפקע"ר.</span>
+        <div id="multiple-ans5" class="multiple-answer-cont">
+          <span class="multiple-answer"></span>
+          <span>אב''כ</span>
         </div>
       `;
 
-      isSecondQuestion = true;
-      totalCorrect = 2; // Set total correct answers for second question
-      checkButton.textContent = 'בדיקה'; // Reset button text
-      handleSelection(); // Reinitialize selection event listeners
+      // isSecondQuestion = true;
+      // multipleTotalCorrect = 2; // Set total correct answers for second question
+      multipleCheckButton.textContent = 'בדיקה'; // Reset button text
+      multipleHandleSelection(); // Reinitialize selection event listeners
     }
 
     // Initialize event listeners
     document.addEventListener('DOMContentLoaded', () => {
-      handleSelection();
+      multipleHandleSelection();
 
-      const checkButton = document.getElementById('check-btn');
-      checkButton.addEventListener('click', () => {
-        if (checkButton.textContent === 'הבא') {
+      const multipleCheckButton = document.getElementById('multiple-check-btn');
+      multipleCheckButton.addEventListener('click', () => {
+        if (multipleCheckButton.textContent === 'הבא') {
           loadNewQuestion();
         } else {
-          checkAnswers();
+          multipleCheckAnswers();
         }
       });
     });
